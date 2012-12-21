@@ -164,8 +164,8 @@ xmax, ymax, zmax   //the physical domain size for each direction
 xmin, ymin, zmin
 
 cfgfile             //The name and path of the input configuration file
-cfgout              //The name and path of the output configuration file (each file generated will
-                     be appended with an integer denoting the step index)
+cfgout              //The name and path of the output configuration file              (each file generated will
+                     //be appended with an integer denoting the step index)
 
 dt                  //The time step (if using fixed)
 nt                  //Number of iterations to perform
@@ -175,8 +175,8 @@ p->courant          //The courant parameter used to determine the time step para
 p->moddton          //Set to 0.0 for fixed time steps setto 1  to enable
 p->hyperdifmom      //Set to 1.0 to switch hyperdiffusion stabilisation on 0.0 disables
 p->readini          //Set to 1.0 to read initial configuration from an input file. 
-                    The 0.0 will generate a configutation using the default if provided
-                    or written by the user.
+                    //The 0.0 will generate a configutation using the default if provided
+                    //or written by the user.
 }}}
 
 The hypediffusion parameters may be altered slightly  but it is recommended to leave them
