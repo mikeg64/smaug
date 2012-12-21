@@ -1,0 +1,14 @@
+file=out/tsteer1.out
+grid 151 X 151
+format = ascii 
+ interleaving = field 
+ majority = row 
+ header = lines 1 
+series =  96  , 1, 1, separator=lines 1
+field = field0, field1 
+ structure = 2-vector, scalar 
+ type = float, float  
+ dependency = positions, positions  
+ positions = regular,regular, 0, 1,0,1 
+ end 
+ 
