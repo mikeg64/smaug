@@ -158,25 +158,26 @@ _make smaug_
 Move back to the base directory and run the model.
 
 The following parameters can be altered in the iosmaugparams.h file
-
-ni,nj,nk           size of the domain (note this will be shifted by 2X the number of ghost cells)
-xmax, ymax, zmax   the physical domain size for each direction
+{{{
+ni,nj,nk           //size of the domain (note this will be shifted by 2X the number of ghost cells)
+xmax, ymax, zmax   //the physical domain size for each direction
 xmin, ymin, zmin
 
-cfgfile             The name and path of the input configuration file
-cfgout              The name and path of the output configuration file (each file generated will
+cfgfile             //The name and path of the input configuration file
+cfgout              //The name and path of the output configuration file (each file generated will
                      be appended with an integer denoting the step index)
 
-dt                  The time step (if using fixed)
-nt                  Number of iterations to perform
+dt                  //The time step (if using fixed)
+nt                  //Number of iterations to perform
 
-p->gamma            The adiabatic constant
-p->courant          The courant parameter used to determine the time step parameter
-p->moddton          Set to 0.0 for fixed time steps setto 1  to enable
-p->hyperdifmom      Set to 1.0 to switch hyperdiffusion stabilisation on 0.0 disables
-p->readini          Set to 1.0 to read initial configuration from an input file. 
+p->gamma            //The adiabatic constant
+p->courant          //The courant parameter used to determine the time step parameter
+p->moddton          //Set to 0.0 for fixed time steps setto 1  to enable
+p->hyperdifmom      //Set to 1.0 to switch hyperdiffusion stabilisation on 0.0 disables
+p->readini          //Set to 1.0 to read initial configuration from an input file. 
                     The 0.0 will generate a configutation using the default if provided
                     or written by the user.
+}}}
 
 The hypediffusion parameters may be altered slightly  but it is recommended to leave them
 at their default tuned settings.
