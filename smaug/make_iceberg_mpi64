@@ -1,0 +1,30 @@
+#make include file for building IoSimulation on felix
+
+MPI_HOME = /usr/local/packages5/openmpi-gnu
+#MPI_HOME = /usr/local/mpich-gm2_GNU_new
+
+
+
+#MPI_INCLUDE = $(MPI_HOME)/include
+COPTFLAGS = -O 
+#CC = g++
+CC = ${MPI_HOME}/bin/mpiCC 
+CLINKER = ${CC}
+LD  	=	${MPI_HOME}/bin/mpiCC
+incDirs = -I$(XERCESCROOT)/include -I$(XALANCROOT)/src -I$(XALANCROOT) -I../IoUtils 
+oDir	=	.
+Bin	=	.
+C_FLAGS = -g -Wall -Wno-deprecated -DUSEMPI
+#VPATH = src:../include
+
+OPTFLAGS= $(COPTFLAGS)
+
+LD_FLAGS =	-g
+LIBS	=	-lm -L$(XERCESCROOT)/lib -L$(XALANCROOT)/lib -lxerces-c -lxalan-c
+
+MYLIBS = ../lib/libIoUtils.a ../lib/libIoSimulation.a
+
+
+
+
+

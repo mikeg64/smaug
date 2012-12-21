@@ -1,0 +1,12 @@
+file=/form.out
+grid=1
+format = ascii 
+ interleaving = record 
+ majority = row 
+field = nsteps, nx, ny 
+ structure = scalar, scalar, scalar 
+ type = int, int, int  
+ dependency = positions, positions,positions  
+ positions = regular, 0, 1 
+ end 
+ 

@@ -1,0 +1,303 @@
+
+
+
+
+real g  = 9.81;
+real u0 = 0;                               
+real v0 = 0;
+real b0  = 0;                               
+real h0 = 5030; 
+
+real cmax[NDIM];
+real courantmax;
+
+int ngi=1;
+int ngj=1;
+//int ngk=2;
+int ni,nj;
+
+
+//Domain definition
+// Define the x domain
+//adiab hydro
+
+
+
+#ifdef USE_SAC
+
+
+//ni=28;    //BACH3D tests
+ni=196;    //kink13D tests
+//ni=21;
+ni=ni+2*ngi;
+//ni=512;
+
+//real xmax=14.19e18;  //bach3d
+//real xmin=-14.19e18; 
+real xmax=2.4e6;
+real xmin=0.0;
+//real dx = xmax/(ni-4);
+real dx = (xmax-xmin)/(ni);
+#endif
+
+
+
+
+#ifdef USE_SAC
+//vac bach3d
+
+//nj=28;    //BACH3D tests
+nj=96;    //kink13D tests
+//nj=46;
+
+nj=nj+2*ngj;
+//ni=512;
+ 
+//real ymax=14.19e18;  //bach3d
+//real ymin=-14.19e18;
+real ymax=8.0e6;
+real ymin=0.0e6;
+//real dx = xmax/(ni-4);
+real dy = (ymax-ymin)/(nj);
+#endif                   
+
+#ifdef USE_SAC_3D
+//vac bach3d
+int nk;
+//nk=28;    //BACH3D tests
+//nk=196;    //kink13D tests
+//nk=46;
+//nk=nk+2*ngk;
+//ni=512;
+
+//real zmax=14.19e18;  //bach3d
+//real zmin=-14.19e18;
+//real zmax=0.9e6;
+//real zmin=-0.9e6;
+
+//real dz = (zmax-zmin)/(nk);
+#endif     
+real *x=(real *)calloc(ni,sizeof(real));
+for(i=0;i<ni;i++)
+		x[i]=i*dx;
+
+real *y=(real *)calloc(nj,sizeof(real));
+for(i=0;i<nj;i++)
+		y[i]=i*dy;
+
+
+
+int step=0;
+//real tmax = 200;
+real tmax = 0.2;
+int steeringenabled=1;
+int finishsteering=0;
+char configfile[300];
+//char *cfgfile="zero1.ini";
+char *cfgfile="zero1_BW.ini";
+//char *cfgfile="zero1_BW_bin.ini";
+char *cfgout="zeroOT";
+
+
+struct params *d_p;
+struct params *p=(struct params *)malloc(sizeof(struct params));
+
+struct state *d_state;
+struct state *state=(struct state *)malloc(sizeof(struct state));
+
+
+
+#ifdef USE_SAC
+dt=0.00065;  //OZT test
+//dt=6.5/10000000.0; //BW test
+//dt=0.00000065;  //BW tests
+//dt=0.000000493;  //BW tests
+//dt=0.005;
+//dt=0.000139;
+//dt=3.0/10000000.0; //BW test
+#endif
+
+#ifdef USE_SAC_3D
+dt=3.5e24;;  //BACH3D
+dt=0.028;  //kink13d 
+#endif
+int nt=(int)((tmax)/dt);
+//nt=3000;
+//nt=5000;
+//nt=200000;
+//nt=150000;
+nt=10;
+real *t=(real *)calloc(nt,sizeof(real));
+printf("runsim 1%d \n",nt);
+//t = [0:dt:tdomain];
+for(i=0;i<nt;i++)
+		t[i]=i*dt;
+
+//real courant = wavespeed*dt/dx;
+
+p->n[0]=ni;
+p->n[1]=nj;
+p->ng[0]=ngi;
+p->ng[1]=ngj;
+
+#ifdef USE_SAC_3D
+  p->n[2]=nk;
+  p->ng[2]=ngk;
+#endif
+
+p->npgp[0]=1;
+p->npgp[1]=1;
+#ifdef USE_SAC_3D
+p->npgp[2]=1;
+#endif
+
+p->dt=dt;
+p->dx[0]=dx;
+p->dx[1]=dy;
+
+#ifdef USE_SAC_3D
+p->dx[2]=dz;
+#endif
+//p->g=g;
+
+
+
+/*constants used for adiabatic hydrodynamics*/
+/*
+p->gamma=2.0;
+p->adiab=0.5;
+*/
+
+
+//ozt test
+p->gamma=5.0/3.0;  //OZ test, kink13d and bach3d
+
+//p->gamma=2.0;  //BW test
+
+//alfven test
+//p->gamma=1.4;
+
+
+
+
+
+
+p->mu=1.0;
+p->eta=0.0;
+p->g[1]=-274.0;
+p->g[0]=0.0;
+//p->g[2]=0.0;
+#ifdef USE_SAC_3D
+
+#endif
+//p->cmax=1.0;
+p->cmax=0.02;
+
+p->rkon=0.0;
+p->sodifon=0.0;
+p->moddton=0.0;
+p->divbon=0.0;
+p->divbfix=0.0;
+p->hyperdifmom=0.0;
+p->readini=0.0;
+p->cfgsavefrequency=1;
+
+
+p->xmax[0]=xmax;
+
+p->xmax[1]=ymax;
+#ifdef USE_SAC_3D
+p->xmax[2]=zmax;
+p->xmin[2]=zmin;
+#endif
+
+p->xmin[0]=xmin;
+p->xmin[1]=ymin;
+
+p->nt=nt;
+p->tmax=tmax;
+
+p->steeringenabled=steeringenabled;
+p->finishsteering=finishsteering;
+
+p->maxviscoef=0;
+//p->chyp=0.0;       
+//p->chyp=0.00000;
+p->chyp3=0.00000;
+
+
+for(i=0;i<NVAR;i++)
+  p->chyp[i]=0.0;
+
+p->chyp[rho]=0.02;
+p->chyp[energy]=0.02;
+p->chyp[b1]=0.02;
+p->chyp[b2]=0.02;
+p->chyp[mom1]=0.4;
+p->chyp[mom2]=0.4;
+
+p->chyp[rho]=0.02;
+p->chyp[mom1]=0;
+p->chyp[mom2]=0;
+
+
+
+
+
+p->chyp[rho]=0.02;
+p->chyp[energy]=0.02;
+p->chyp[b1]=0.02;
+p->chyp[b2]=0.02;
+p->chyp[mom1]=0.4;
+p->chyp[mom2]=0.4;
+
+
+
+
+iome elist;
+meta meta;
+
+
+//set boundary types
+for(int ii=0; ii<NVAR; ii++)
+for(int idir=0; idir<NDIM; idir++)
+{
+   (p->boundtype[ii][idir])=0;  //period=0 mpi=1 mpiperiod=2  cont=3 contcd4=4 fixed=5 symm=6 asymm=7
+}
+
+
+
+elist.server=(char *)calloc(500,sizeof(char));
+
+
+meta.directory=(char *)calloc(500,sizeof(char));
+meta.author=(char *)calloc(500,sizeof(char));
+meta.sdate=(char *)calloc(500,sizeof(char));
+meta.platform=(char *)calloc(500,sizeof(char));
+meta.desc=(char *)calloc(500,sizeof(char));
+meta.name=(char *)calloc(500,sizeof(char));
+meta.ini_file=(char *)calloc(500,sizeof(char));
+meta.log_file=(char *)calloc(500,sizeof(char));
+meta.out_file=(char *)calloc(500,sizeof(char));
+
+strcpy(meta.directory,"out");
+strcpy(meta.author,"MikeG");
+strcpy(meta.sdate,"Nov 2009");
+strcpy(meta.platform,"swat");
+strcpy(meta.desc,"A simple test of SAAS");
+strcpy(meta.name,"test1");
+strcpy(meta.ini_file,"test1.ini");
+strcpy(meta.log_file,"test1.log");
+strcpy(meta.out_file,"test1.out");
+//meta.directory="out";
+//meta.author="MikeG";
+//meta.sdate="Nov 2009";
+//meta.platform="felix";
+//meta.desc="A simple test of SAAS";
+//meta.name="tsteer1";
+
+	strcpy(elist.server,"localhost1");
+	elist.port=80801;
+	elist.id=0;
+
+

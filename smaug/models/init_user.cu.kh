@@ -1,0 +1,334 @@
+
+
+
+//ozttest
+__device__ __host__
+void init_user_MODID (real *w, struct params *p,int *ii) {
+                    
+                    //real b0=1.0/sqrt(4.0*PI);
+                    real b0=1.0;
+                    //real ptot=5.0/(12.0*PI);
+                    real ptot=5.0/3.0;
+                    real rrho=1.0;
+                    real rgamm1;
+                    real e1,e2,xp,yp;
+                    real qv,width,dv,k1,sigma;
+  int i,j,k;
+  i=ii[0];
+  j=ii[1];
+
+			qv=0.645;
+			width=0.05;
+			dv=0.01;
+			k1=6.2831853;
+			sigma=0.2;
+	#ifdef USE_SAC
+                    b0=1.0;
+                    ptot=1.0;
+		    w[fencode3_i(p,ii,rhob)]=1.0;
+                    //w[fencode3_i(p,ii,rhob)]=25.0/9.0;
+
+                    rgamm1=1.0/((p->gamma)-1);
+		    
+		    w[fencode3_i(p,ii,b2)]=0.0;
+		    //w[fencode3_i(p,ii,b1)]=0.129;
+                    w[fencode3_i(p,ii,b1)]=0.0;
+
+                    xp=(p->xmin[0])+ii[0]*(p->dx[0]);
+                    yp=(p->xmin[1])+ii[1]*(p->dx[1]);
+
+		    w[fencode3_i(p,ii,mom2)]=dv*sin(k1*xp)*exp(-(yp*yp)/(sigma*sigma));
+                    w[fencode3_i(p,ii,mom1)]=qv*tanh(yp/width);
+
+e1=ptot*rgamm1+(0.5*(w[fencode3_i(p,ii,mom1)]*w[fencode3_i(p,ii,mom1)]+w[fencode3_i(p,ii,mom2)]*w[fencode3_i(p,ii,mom2)])/rrho);
+ 
+                   e2=0.5*(w[fencode3_i(p,ii,b1)]*w[fencode3_i(p,ii,b1)]+w[fencode3_i(p,ii,b2)]*w[fencode3_i(p,ii,b2)]);
+                    //w[fencode3_i(p,ii,energy)]*=rgamm1;
+                    w[fencode3_i(p,ii,energyb)]=(e1+e2);
+
+                   w[fencode3_i(p,ii,energy)]=w[fencode3_i(p,ii,energyb)];
+                   w[fencode3_i(p,ii,energyb)]=0.0;
+
+                   w[fencode3_i(p,ii,rho)]=w[fencode3_i(p,ii,rhob)];
+                   w[fencode3_i(p,ii,rhob)]=0.0;
+                   //w[fencode3_i(p,ii,rho)]=0.0;
+
+
+
+
+       #endif
+
+
+
+
+
+}
+
+
+
+
+
+//ozttest
+/*__device__ __host__
+void init_user_MODID (real *w, struct params *p,int *ii) {
+                    
+                    //real b0=1.0/sqrt(4.0*PI);
+                    real b0=1.0;
+                    //real ptot=5.0/(12.0*PI);
+                    real ptot=5.0/3.0;
+                    real rrho=1.0;
+                    real rgamm1;
+                    real e1,e2,xp,yp;
+                    real qv,width,dv,k1,sigma;
+  int i,j,k;
+  i=ii[0];
+  j=ii[1];
+
+			qv=0.645;
+			width=0.05;
+			dv=0.01;
+			k1=6.2831853;
+			sigma=0.2;
+
+
+
+			real p1,rho1,rho2,v_max,v_min,v1,v2;
+                        real xc1,xc2,smooth_r;
+
+			p1=2.50;
+
+
+			rho1=1.00;
+			rho2=2.00;
+
+			v_max=0.50;
+			v_min=-0.50;
+
+			v2=0.010;
+			v1=0.020;
+
+
+			smooth_r=200.00;
+
+			xc1=-0.25;
+			xc2=0.25;
+
+	#ifdef USE_SAC
+// ********************** smooth  edges for rho ***************
+
+                    xp=(p->xmin[0])+ii[0]*(p->dx[0]);
+                    yp=(p->xmin[1])+ii[1]*(p->dx[1]);
+
+
+
+      tmp(ix_1,ix_2)=((atan((x(ix_1,ix_2,1)-xc1)/x(ixmax1,ix_2,1)*smooth_r))&
+         +Pi/2.d0)/Pi
+
+
+
+
+
+
+
+		    w[fencode3_i(p,ii,rhob)]=1.0;
+
+                    rgamm1=1.0/((p->gamma)-1);
+		    
+		    w[fencode3_i(p,ii,b2)]=0.0;
+		    w[fencode3_i(p,ii,b1)]=0.129;
+		    w[fencode3_i(p,ii,mom2)]=dv*sin(k1*xp)*exp(-(yp*yp)/(sigma*sigma));
+
+                    w[fencode3_i(p,ii,mom1)]=qv*tanh(yp/width);
+                    e1=ptot*rgamm1+(0.5*(w[fencode3_i(p,ii,mom1)]*w[fencode3_i(p,ii,mom1)]+w[fencode3_i(p,ii,mom2)]*w[fencode3_i(p,ii,mom2)])/rrho);
+ 
+                   e2=0.5*(w[fencode3_i(p,ii,b1)]*w[fencode3_i(p,ii,b1)]+w[fencode3_i(p,ii,b2)]*w[fencode3_i(p,ii,b2)]);
+                    w[fencode3_i(p,ii,energyb)]=(e1+e2);
+
+                   w[fencode3_i(p,ii,energy)]=w[fencode3_i(p,ii,energyb)];
+                   w[fencode3_i(p,ii,energyb)]=0.0;
+
+                   w[fencode3_i(p,ii,rho)]=w[fencode3_i(p,ii,rhob)];
+                   w[fencode3_i(p,ii,rhob)]=0.0;
+                   //w[fencode3_i(p,ii,rho)]=0.0;
+
+
+
+
+       #endif
+
+
+
+
+
+}*/
+
+
+//use the following implementation from sac
+
+
+/*subroutine specialini(ixmin1,ixmin2,ixmax1,ixmax2,w)
+
+include 'vacdef.f'
+
+integer:: ixmin1,ixmin2,ixmax1,ixmax2
+integer:: ix_1,ix_2,ix_3
+double precision:: w(ixGlo1:ixGhi1,ixGlo2:ixGhi2,1:nw)
+
+double precision:: rhoin,xcent1,xcent2,radius
+double precision:: inirho,iniene
+double precision:: onemor,inix,ddx
+double precision:: p_1,p_2
+
+integer:: iii_,iix_1,info,i,j
+double precision:: pi,comi,eneu,sum,mode,bmax,l
+character*79 atmfilename
+
+double precision:: p1,p2,rho1,rho2,v1,v2,T1,T2, b1_1,b1_2,b2_1,b2_2
+double precision:: vx,vz,bx,bz, tdep, v_max, v_min, xc1, xc2, rho_min,&
+    rho_max, smooth_r
+
+!-----------------------------------------------------------------------------
+
+p1=2.5d0
+
+
+rho1=1.0d0
+rho2=2.0d0
+
+v_max=0.5d0
+v_min=-0.5d0
+
+v2=0.01d0
+v1=0.02d0
+
+
+
+!do ix_1=ixmin1,ixmax1
+! do ix_2=ixmin2,ixmax2
+
+!if ((x(ix_1,ix_2,1) .ge. -0.25) .and. (x(ix_1,ix_2,1) .le. 0.25)) then
+!  w(ix_1,ix_2,rho_)=rho2
+!  w(ix_1,ix_2,m1_)=0.d0
+!  w(ix_1,ix_2,m2_)=v_max*w(ix_1,ix_2,rho_)
+!endif
+
+!if ((x(ix_1,ix_2,1) .le. -0.25) .or. (x(ix_1,ix_2,1) .ge. 0.25)) then
+!   w(ix_1,ix_2,rho_)=rho1
+!   w(ix_1,ix_2,m1_)=0.d0
+!   w(ix_1,ix_2,m2_)=v_min*w(ix_1,ix_2,rho_)
+!endif
+
+!!if (ix_1 .ge.110) then
+!!   w(ix_1,ix_2,m1_)=0.d0
+!!   w(ix_1,ix_2,m2_)=v_max*w(ix_1,ix_2,rho_)
+!!endif
+
+
+! enddo
+!enddo
+
+! ********************** smooth  edges for rho ***************
+smooth_r=200.0d0
+
+xc1=-0.25
+
+
+  do ix_1=ixmin1,ixmax1
+   do ix_2=ixmin2,ixmax2
+
+      tmp(ix_1,ix_2)=((atan((x(ix_1,ix_2,1)-xc1)/x(ixmax1,ix_2,1)*smooth_r))&
+         +Pi/2.d0)/Pi
+
+   enddo
+  enddo
+
+rho_max=maxval(tmp(ixmin1:ixmax1,ixmin2:ixmax2))
+rho_min=minval(tmp(ixmin1:ixmax1,ixmin2:ixmax2))
+
+    tmp(ixmin1:ixmax1,ixmin2:ixmax2)=(tmp(ixmin1:ixmax1,ixmin2:ixmax2)&
+       -rho_min)/rho_max
+       
+xc2=0.25
+
+
+  do ix_1=ixmin1,ixmax1
+   do ix_2=ixmin2,ixmax2
+
+      w(ix_1,ix_2,rho_)=((atan((x(ix_1,ix_2,1)-xc2)/x(ixmax1,ix_2,1)&
+         *smooth_r))+Pi/2.d0)/Pi
+
+   enddo
+  enddo
+
+rho_max=maxval(w(ixmin1:ixmax1,ixmin2:ixmax2,rho_))
+rho_min=minval(w(ixmin1:ixmax1,ixmin2:ixmax2,rho_))
+
+
+    tmp(ixmin1:ixmax1,ixmin2:ixmax2)=(tmp(ixmin1:ixmax1,ixmin2:ixmax2)&
+       -(w(ixmin1:ixmax1,ixmin2:ixmax2,rho_)-rho_min)/rho_max)   
+    w(ixmin1:ixmax1,ixmin2:ixmax2,rho_)=rho1+rho1*tmp(ixmin1:ixmax1,&
+       ixmin2:ixmax2)
+    
+    
+    
+! **************************************************************
+
+
+
+! ********************** smooth  edges for mx ***************
+
+
+  w(ixmin1:ixmax1,ixmin2:ixmax2,m2_)=(tmp(ixmin1:ixmax1,ixmin2:ixmax2)&
+     -0.5d0)*w(ixmin1:ixmax1,ixmin2:ixmax2,rho_)
+
+! **************************************************************
+
+    
+!    w(ix^S,v2_)=(w(ix^S,v2_)-w(ixmin1,10,v2_))*(v_max*w(ix^S,rho_)-v_min*w(ix^S,rho_))
+!    w(ix^S,v2_)=w(ix^S,v2_)/(w(ixmax1,10,v2_)-w(ixmin1,10,v2_)) !+v_min*w(ix^S,rho_)
+
+
+do ix_1=ixmin1,ixmax1
+ do ix_2=ixmin2,ixmax2
+
+if ((x(ix_1,ix_2,1) .gt. -0.23) .and. (x(ix_1,ix_2,1) .lt. 0.27)) then
+   w(ix_1,ix_2,m1_)=v2*cos(2.0d0*Pi*(x(ix_1,ix_2,2)))*w(ix_1,ix_2,rho_)
+   
+endif   
+
+ enddo
+enddo
+
+bx=0.d0 !1.d0/2.0/sqrt(Pi)
+bz=0.d0 !1.d0/2.0/sqrt(Pi)
+
+
+  w(ixmin1:ixmax1,ixmin2:ixmax2,b2_)=0.0d0
+  w(ixmin1:ixmax1,ixmin2:ixmax2,b1_)=0.0d0
+  
+  w(ixmin1:ixmax1,ixmin2:ixmax2,e_)=p1/(eqpar(gamma_)-1.d0)
+
+  w(ixmin1:ixmax1,ixmin2:ixmax2,e_)=w(ixmin1:ixmax1,ixmin2:ixmax2,e_)&
+     +half*((w(ixmin1:ixmax1,ixmin2:ixmax2,b1_)**2.d0+w(ixmin1:ixmax1,&
+     ixmin2:ixmax2,b2_)**2.d0))+half*(w(ixmin1:ixmax1,ixmin2:ixmax2,m1_)&
+     **2.d0+w(ixmin1:ixmax1,ixmin2:ixmax2,m2_)**2.d0)/(w(ixmin1:ixmax1,&
+     ixmin2:ixmax2,rho_)+w(ixmin1:ixmax1,ixmin2:ixmax2,rhob_))
+
+ ! w(ix^S,eb_)=w(ix^S,e_)
+  w(ixmin1:ixmax1,ixmin2:ixmax2,eb_)=0.d0
+  
+!  w(ix^S,rhob_)=w(ix^S,rho_)
+  w(ixmin1:ixmax1,ixmin2:ixmax2,rhob_)=0.d0
+  
+  w(ixmin1:ixmax1,ixmin2:ixmax2,bg2_)=0.d0
+  w(ixmin1:ixmax1,ixmin2:ixmax2,bg1_)=0.d0
+
+return
+end
+*/
+
+
+
+
+
+
