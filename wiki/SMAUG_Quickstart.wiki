@@ -105,11 +105,11 @@ changed by editing the CUDA.
 The make_inputs file includes a number of compiler switches the smaug specific switches used for 
 both the host compiler and cuda compiler are as follows.
 
-USE_SAC            Set this to build and compile 2D models
-USE_SAC_3D         Set this to build and compile 3D models
-USE_MULTIGPU       Set this to build for multi GPU models (e.g. if you are using MPI)
-USE_MPI            Set this if you are using MPI (need to set the host                             compiler to a suitabel MPI compiler)
-USE_USERSOURCE     Set this if you are using user provide source terms
+*USE_SAC            Set this to build and compile 2D models
+*USE_SAC_3D         Set this to build and compile 3D models
+*USE_MULTIGPU       Set this to build for multi GPU models (e.g. if you are using MPI)
+*USE_MPI            Set this if you are using MPI (need to set the host                             compiler to a suitabel MPI compiler)
+*USE_USERSOURCE     Set this if you are using user provide source terms
 
 The cuda specific switches are as follows
 
