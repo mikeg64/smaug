@@ -40,9 +40,9 @@ Guidelines for correct installation of the CUDA toolkit and drivers can be found
 
 SMAUG can be downloaded in 3 ways
 
-   *Download and extract the latest tarball from the google code site
-   *Checkout the distribution from the user release version from the google repository. This is recommended if you require regular updates and bugfixes.
-   *Checkout the distribution from the developer repository. This is recommended if you wish to participate in the development of future code versions.
+   * Download and extract the latest tarball from the google code site
+   * Checkout the distribution from the user release version from the google repository. This is recommended if you require regular updates and bugfixes.
+   * Checkout the distribution from the developer repository. This is recommended if you wish to participate in the development of future code versions.
 
 
 Method 1:
@@ -181,13 +181,15 @@ p->readini          Set to 1.0 to read initial configuration from an input file.
 The hypediffusion parameters may be altered slightly  but it is recommended to leave them
 at their default tuned settings.
 
-{{{p->chyp[rho]=0.02;
+{{{
+p->chyp[rho]=0.02;
 p->chyp[energy]=0.02;
 p->chyp[b1]=0.02;
 p->chyp[b2]=0.02;
 p->chyp[mom1]=0.4;
 p->chyp[mom2]=0.4;
-p->chyp[rho]=0.02;}}}
+p->chyp[rho]=0.02;
+}}}
 
 Boundary types are also set here according to field variable, direction and top or bottom boundary.
 The boundary conditions may also be user configured as briefly outlined in the following section.
