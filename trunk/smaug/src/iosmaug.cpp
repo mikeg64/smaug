@@ -72,16 +72,16 @@ if(argc>1)
    printf("read file junk is %d %s\n",elist.port,elist.server);
 }
 #endif
-
+printf("here1+1\n");
 
        /*********************************************************************************************************/
        /* Start of section to set domain sizes and config filenames*/
        /*********************************************************************************************************/
 
 
-	char ext[3];
-	char tcfg[300];
-	char stemp[300];
+	char ext[4];
+	char tcfg[600];
+	char stemp[600];
 	char *pch1,*pch2;
 	strcpy(stemp,cfgfile);
 	pch1 = strtok (stemp,".");
@@ -89,6 +89,8 @@ if(argc>1)
 	pch2 = strtok (NULL,".");
 	sprintf(ext,"%s",pch2);
 	sprintf(configfile,"%s",cfgout);
+
+
 	#ifdef USE_MULTIGPU
 	#ifdef USE_MPI
 	     MPI::Init(argc, argv);

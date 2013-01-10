@@ -148,8 +148,8 @@ allsac:$(ALLOBJS)
 #	$(NVCC) --allow-multiple-defintion -g $(LIBS)  $(incDirs) -o $(Bin)/ioshalloww $(BASICEXOBJS) $(MYLIBS)
 smaug:$(BASICEXOBJS)
 	rm iosmaug.o
-	$(CC) $(C_FLAGS) $(CCFLAGS) $(incDirs) $(LINKFLAGS)  -o ../obj/iosmaug.o -c iosmaug.cpp
-	$(CC) -g $(LIBS)  $(incDirs) -o $(Bin)/smaug $(ALLOBJS) $(MYLIBS)
+	$(CC) $(C_FLAGS) $(CCFLAGS) $(incDirs)  -o ../obj/iosmaug.o -c iosmaug.cpp
+	$(CC) $(LINKFLAGS)  $(LIBS)  $(incDirs) -o $(Bin)/smaug $(ALLOBJS) $(MYLIBS)
 
 
 

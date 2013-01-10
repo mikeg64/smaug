@@ -9,8 +9,9 @@ void init_user_MODID (real *w, struct params *p,int *ii) {
 	real Ly, e0,c0;
         real x,y,z;
 
-
-	Ly=9.46d15;
+        real rgamm1,e1;
+        int jj;
+	Ly=9.46e15;
 
 	e0=1.e48;
 
@@ -33,8 +34,8 @@ void init_user_MODID (real *w, struct params *p,int *ii) {
 	  k=ii[2];
 
           x=i*(p->dx[0]);
-          y=i*(p->dx[1]);
-          z=i*(p->dx[2]);
+          y=j*(p->dx[1]);
+          z=k*(p->dx[2]);
 
 
 
@@ -86,12 +87,45 @@ void init_user_MODID (real *w, struct params *p,int *ii) {
 		    w[fencode3_i(p,ii,b3)]=0;
 
 
+#else
+
+                    w[fencode3_i(p,ii,rhob)]=0.0;
+                    w[fencode3_i(p,ii,energy)]=0.0;
+		    w[fencode3_i(p,ii,rhob)]=rho0+c0/((x-xc)*(x-xc)+(y-yc)*(y-yc));
+
+                    rgamm1=1.0/((p->gamma)-1);
+                    w[fencode3_i(p,ii,energyb)]=rgamm1*pow(rho0,(p->gamma));
+		    
+		    w[fencode3_i(p,ii,b1)]=0;
+		    w[fencode3_i(p,ii,b2)]=0;
 
 
+		    w[fencode3_i(p,ii,mom2)]=v2;
+		    w[fencode3_i(p,ii,mom1)]=v1;
+
+                   e1=(0.5*rgamm1*(1-((p->gamma)-1))*(w[fencode3_i(p,ii,b1)]*w[fencode3_i(p,ii,b1)]+w[fencode3_i(p,ii,b2)]*w[fencode3_i(p,ii,b2)]));
+                    w[fencode3_i(p,ii,energyb)]=w[fencode3_i(p,ii,energyb)]-e1;
+
+
+                    w[fencode3_i(p,ii,energy)]=w[fencode3_i(p,ii,energyb)];
+                    w[fencode3_i(p,ii,energyb)]=0.0;
+
+
+                     if(i==16 && jj==16  )
+                        w[fencode3_i(p,ii,energy)]=e0/pow(p->dx[0],3.0);
+  
+			// w(40,28,e_)=e0/(x(1,3,2)-x(1,2,2))**3.d0
+			//  w(80,92,e_)=e0/(x(1,3,2)-x(1,2,2))**3.d0  
+
+		   // w[fencode3_i(p,ii,bg1)]=w[fencode3_i(p,ii,b1)];
+		   // w[fencode3_i(p,ii,bg2)]=w[fencode3_i(p,ii,b2)];
+
+		   // w[fencode3_i(p,ii,b1)]=0;
+		   // w[fencode3_i(p,ii,b2)]=0;
        #endif
 
 
-      }//end of looping over elements
+      //}//end of looping over elements
 
 
 
