@@ -1,8 +1,8 @@
 #make include file for building StarSimulation IoSimTestSimple on Felix
 # Standard defines:
-CC  	=	g++
+CC  	=	pgCC
 ##CC  	=	mpiCC
-NVCC  	=	nvcc
+NVCC  	=	pgCC
 FF  	=	gfortran
 LD  	=	g++
 HOMEV	=	..
@@ -14,14 +14,15 @@ MYLIBS  =
 
 #CUDA = /usr/local/cuda
 #CUDA = /usr/local/cuda-5.0
-CUDA = /usr/local/lib/nvidia-cuda/toolkit/4.0.17
+#CUDA = /usr/local/lib/nvidia-cuda/toolkit/4.0.17
+CUDA = /usr/local/packages5/pgi12.10/linux86-64/2012/cuda/4.1
 
 BASE = /usr/local/dx
 incDirs = -I$(BASE)/include  -I$(IOME_HOME)/include  -I/usr/local/include -I$(CUDA)/include -I$../include
 
 
-LD_FLAGS =	-g
-
+LD_FLAGS =	
+LINKFLAGS =	-Mcudax86
 
 #remove comments from following lines to include/link IOME
 #IOMELIBS	=	-L$(IOME_HOME)/lib -L$(XERCESCROOT)/lib -L$(XALANCROOT)/lib -lxerces-c -lxalan-c -lxalanMsg  -lm -liogenericsimulation
@@ -34,15 +35,16 @@ LD_FLAGS =	-g
 #use -DUSE_IOME to enable IOME
 #CUDACCFLAGS = --ptxas-options=-v -maxrregcount=32 --device-emulation   -DUSE_REAL -DUSE_SAC -DUSE_SHOCKVISC  -DADIABHYDRO -DUSE_VAC -DD1D -DUSE_IOME -DUSE_USERSOURCE -DUSE_SAC_3D -DUSE_DORDER3
 #compiling with  -arch sm_13 enables double precision to be used
-CUDACCFLAGS = --ptxas-options=-v -arch sm_20  -maxrregcount=32 -DUSE_SAC
+#CUDACCFLAGS = --ptxas-options=-v -arch sm_20  -maxrregcount=32 -DUSE_SAC
+CUDACCFLAGS = -DUSE_SAC
 CCFLAGS = -DUSE_SAC -DD1D
 
 
 
 
 
-LIBS	=	-L$(CUDA)/lib -L$(CUDA)/lib64   -L../lib -L/usr/local/lib -lm $(IOMELIBS) -lcudart
-
+#LIBS	=	-L$(CUDA)/lib -L$(CUDA)/lib64   -L../lib -L/usr/local/lib -lm $(IOMELIBS) -lcudart
+LIBS	=	-L$(CUDA)/lib -L$(CUDA)/lib64   -L../lib -L/usr/local/lib -lm $(IOMELIBS)
 
 #C_FLAGS
 #NVC_FLAGS	= -g -Dlinux -DBASE=\"$(BASE)\" -DIO_XERCESCVERSION=xercesc_2_8 -DIO_FORTRAN

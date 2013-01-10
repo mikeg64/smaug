@@ -275,8 +275,8 @@ void init_user_MODID (real *w, struct params *p,int *ii) {
 	  k=ii[2];
 
           x=i*(p->dx[0]);
-          y=i*(p->dx[1]);
-          z=i*(p->dx[2]);
+          y=j*(p->dx[1]);
+          z=k*(p->dx[2]);
 	#ifdef USE_SAC_3D
 
 
