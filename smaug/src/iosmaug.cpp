@@ -72,16 +72,16 @@ if(argc>1)
    printf("read file junk is %d %s\n",elist.port,elist.server);
 }
 #endif
-printf("here1+1\n");
+
 
        /*********************************************************************************************************/
        /* Start of section to set domain sizes and config filenames*/
        /*********************************************************************************************************/
 
 
-	char ext[4];
-	char tcfg[600];
-	char stemp[600];
+	char ext[3];
+	char tcfg[300];
+	char stemp[300];
 	char *pch1,*pch2;
 	strcpy(stemp,cfgfile);
 	pch1 = strtok (stemp,".");
@@ -89,8 +89,6 @@ printf("here1+1\n");
 	pch2 = strtok (NULL,".");
 	sprintf(ext,"%s",pch2);
 	sprintf(configfile,"%s",cfgout);
-
-
 	#ifdef USE_MULTIGPU
 	#ifdef USE_MPI
 	     MPI::Init(argc, argv);
@@ -495,11 +493,14 @@ char *method=NULL;
 		#ifdef USE_MULTIGPU
 			gpusync();
 		#endif
+                printf("init_config\n");
 		initconfig(p, &meta, wmod,wd);
+                printf("user initialisation\n");
 		initialisation_user1(wmod,wd,p);
 
 		// initialisation_user2(wmod,wd,p);
 		//write the config file to ascii
+                printf("writing ini file\n");
 		writeasciivacconfig(configinfile,*p, meta , wmod,wd,hlines,*state,mode);
 		#ifdef USE_MULTIGPU
 			gpusync();

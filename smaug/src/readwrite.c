@@ -1165,10 +1165,24 @@ if(mode==0)
     // if(p.mode==3)
     //    sprintf(configfile,"%s",cfgfile);
    #else
-
+   char ext[3];
+   char *pch1,*pch2;
+   pch1 = strtok (configfile,".");
+   sprintf(tcfg,"%s",pch1);
+   pch2 = strtok (NULL,".");
+   sprintf(ext,"%s",pch2);
+     if(strcmp(ext,"ini")==0)
+     {
+         sprintf(configfile,"%s.%s",tcfg,ext);
+       }
+     else
+     {
+	sprintf(configfile,"%s_%d.%s",tcfg,st.it,ext); 
+	//sprintf(configfile,"%s_%d.out",cfgfile,st.it);
+       }
 
          //save file containing current data
-      sprintf(configfile,"%s_%d.out",cfgfile,st.it);
+      
   #endif
 
 //printf("%s %d", configfile,p.ipe);
