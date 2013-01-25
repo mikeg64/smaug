@@ -710,6 +710,10 @@ char *method=NULL;
        /*********************************************************************************************************/
        /* Start looping over iterations*/
        /*********************************************************************************************************/
+
+        ordero=1;
+        cuboundary(&p,&bp,&d_p,&d_bp,&d_state,&d_wmod, ordero,0,0);
+
 	for( n=1;n<=nt;n++)
 	{
 	    p->it=n;
@@ -1029,7 +1033,7 @@ char *method=NULL;
           tc=second();
           cusource(&p,&d_p,&d_state,&d_w,&d_wmod, &d_dwn1, &d_wd,order, ordero,p->dt);
                 tcal+=(second()-tc);
-	  //cuboundary(&p,&bp,&d_p,&d_bp,&d_state,&d_wmod, ordero,0,0);
+	  cuboundary(&p,&bp,&d_p,&d_bp,&d_state,&d_wmod, ordero,0,0);
 
 	} //end of if((p->rkon)==0)
        /*********************************************************************************************************/
