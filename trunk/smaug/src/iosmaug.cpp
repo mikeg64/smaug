@@ -807,6 +807,8 @@ char *method=NULL;
 	  ordero=1;
 	  order=0;
          tc=second();
+	  p->qt=(p->qt)+dt;
+
 	  cucomputedervfields(&p,&d_p,&d_wmod, &d_wd,order);
 	  
 	 for(int dir=0;dir<NDIM; dir++)

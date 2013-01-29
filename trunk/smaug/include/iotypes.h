@@ -104,6 +104,7 @@ struct params {
 	int nt;
         int it;
         real tmax;
+        real qt;
 
         real boundu[NDIM][NVAR];
         real boundl[NDIM][NVAR];
