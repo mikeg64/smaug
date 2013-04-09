@@ -168,13 +168,13 @@ p->chyp3=0.00000;
 for(i=0;i<NVAR;i++)
   p->chyp[i]=0.0;
 
-p->chyp[rho]=0.02;
-p->chyp[energy]=0.02;
-p->chyp[b1]=0.02;
-p->chyp[b2]=0.02;
-p->chyp[mom1]=0.4;
-p->chyp[mom2]=0.4;
-p->chyp[rho]=0.02;
+p->chyp[rho]=0.2;
+p->chyp[energy]=0.2;
+p->chyp[b1]=0.2;
+p->chyp[b2]=0.2;
+p->chyp[mom1]=0.2;
+p->chyp[mom2]=0.2;
+p->chyp[rho]=0.2;
 
 p->npe=1;
 

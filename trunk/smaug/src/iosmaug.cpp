@@ -79,16 +79,27 @@ if(argc>1)
        /*********************************************************************************************************/
 
 
-	char ext[3];
+	char ext[4];
 	char tcfg[300];
 	char stemp[300];
+
+
 	char *pch1,*pch2;
 	strcpy(stemp,cfgfile);
+
+
 	pch1 = strtok (stemp,".");
+
+
 	sprintf(tcfg,"%s",pch1);
 	pch2 = strtok (NULL,".");
+
 	sprintf(ext,"%s",pch2);
+
+
 	sprintf(configfile,"%s",cfgout);
+
+
 	#ifdef USE_MULTIGPU
 	#ifdef USE_MPI
 	     MPI::Init(argc, argv);
@@ -118,6 +129,9 @@ if(argc>1)
 	p->gxmin[2]=zmin;
 
 	#endif
+
+
+
 	  sprintf(configinfile,"%s",cfgfile);
 
 	//adopt the sac MPI naming convention append the file name npXXYY where XX and YY are the
