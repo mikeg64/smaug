@@ -52,11 +52,7 @@ __global__ void hyperdifbsource4_parallel(struct params *p,  real *wmod,
    ip=iindex-(jp*ni);
 #endif  
 
-#ifdef USE_SAC_3D
-  real rdx=(((p->dx[0])*(dim==0))+(p->dx[1])*(dim==1)+(p->dx[2])*(dim==2));
-#else
-  real rdx=(((p->dx[0])*(dim==0))+  (p->dx[1])*(dim==1)  );
-#endif
+
 
 int shift=order*NVAR*dimp;
    
@@ -70,6 +66,14 @@ int shift=order*NVAR*dimp;
 	   iia[2]=kp;
            k=iia[2];
      #endif
+
+
+#ifdef USE_SAC_3D
+  real rdx=(((wd[encode3_hdb1(p,i,j,k,delx1)])*(dim==0))+(wd[encode3_hdb1(p,i,j,k,delx2)])*(dim==1)+(wd[encode3_hdb1(p,i,j,k,delx3)])*(dim==2));
+#else
+  real rdx=(((wd[encode3_hdb1(p,i,j,k,delx1)])*(dim==0))+  (wd[encode3_hdb1(p,i,j,k,delx2)])*(dim==1)  );
+#endif
+
 
      #ifdef USE_SAC_3D
      if(i<((p->n[0])) && j<((p->n[1])) && k<((p->n[2])))
@@ -124,11 +128,7 @@ __global__ void hyperdifbsource3_parallel(struct params *p, real *wmod,
    ip=iindex-(jp*ni);
 #endif  
 
-#ifdef USE_SAC_3D
-  real rdx=(((wd[encode3_hdb1(p,i,j,k,delx1)])*(dim==0))+(wd[encode3_hdb1(p,i,j,k,delx2)])*(dim==1)+(wd[encode3_hdb1(p,i,j,k,delx3)])*(dim==2));
-#else
-  real rdx=(((wd[encode3_hdb1(p,i,j,k,delx1)])*(dim==0))+  (wd[encode3_hdb1(p,i,j,k,delx2)])*(dim==1)  );
-#endif
+
 
 int shift=order*NVAR*dimp;
 
@@ -143,6 +143,15 @@ int shift=order*NVAR*dimp;
 	   iia[2]=kp;
            k=iia[2];
      #endif
+
+
+#ifdef USE_SAC_3D
+  real rdx=(((wd[encode3_hdb1(p,i,j,k,delx1)])*(dim==0))+(wd[encode3_hdb1(p,i,j,k,delx2)])*(dim==1)+(wd[encode3_hdb1(p,i,j,k,delx3)])*(dim==2));
+#else
+  real rdx=(((wd[encode3_hdb1(p,i,j,k,delx1)])*(dim==0))+  (wd[encode3_hdb1(p,i,j,k,delx2)])*(dim==1)  );
+#endif
+
+
 
      #ifdef USE_SAC_3D
      if(i<((p->n[0])) && j<((p->n[1])) && k<((p->n[2])))
