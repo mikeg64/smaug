@@ -157,11 +157,6 @@ __global__ void hyperdifesource3_parallel(struct params *p,  real *wmod,
 int shift=order*NVAR*dimp;
 
 
-#ifdef USE_SAC_3D
-  rdx=(((wd[encode3_hde1(p,i,j,k,delx1)])*(dim==0))+(wd[encode3_hde1(p,i,j,k,delx2)])*(dim==1)+(wd[encode3_hde1(p,i,j,k,delx3)])*(dim==2));
-#else
-  rdx=(((wd[encode3_hde1(p,i,j,k,delx1)])*(dim==0))+  (wd[encode3_hde1(p,i,j,k,delx2)])*(dim==1)  );
-#endif
 
 
 
@@ -176,6 +171,16 @@ int shift=order*NVAR*dimp;
 	   ii[2]=kp;
            k=ii[2];
      #endif
+
+
+	#ifdef USE_SAC_3D
+	  rdx=(((wd[encode3_hde1(p,i,j,k,delx1)])*(dim==0))+(wd[encode3_hde1(p,i,j,k,delx2)])*(dim==1)+(wd[encode3_hde1(p,i,j,k,delx3)])*(dim==2));
+	#else
+	  rdx=(((wd[encode3_hde1(p,i,j,k,delx1)])*(dim==0))+  (wd[encode3_hde1(p,i,j,k,delx2)])*(dim==1)  );
+	#endif
+
+
+
 
      #ifdef USE_SAC_3D
        if(i<((p->n[0])) && j<((p->n[1])) && k<((p->n[2])))

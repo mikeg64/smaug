@@ -1,0 +1,145 @@
+
+
+__device__ __host__
+int addsourceterms2_MODID(real *dw, real *wd, real *w, struct params *p, struct state *s,int *ii,int field,int dir) {
+
+  int direction;
+  int status=0;
+
+   real xc1,xc2,r1,r2;
+   real xxmax,yymax;
+   real dx,dy,dz;
+   real aa;
+   real s_period;
+   real tdep;
+   real s_rad1,s_rad2;
+   real delta_x, delta_z;
+   real exp_x,exp_z,exp_xyz;
+   real vvv,vvz,AA;
+
+
+
+
+
+   real xp,yp,zp;
+   int i,j,k;
+ 	  
+	  i=ii[0];
+	  j=ii[1];
+
+
+
+real xc1Mm=0.0174;  // !Mm        z axis
+real xc2Mm=1.998046;  // !0.99d0  !Mm        x axis
+//!xc3Mm=1.0 ;//!0.99d0  !Mm        y axis
+
+
+xc1=xc1Mm*1.0e6;//  !m        z axis
+xc2=xc2Mm*1.0e6;//  !m        x axis
+//!xc3=xc3Mm*1.0d6  !m        y axis
+
+xxmax=2.0e6;
+yymax=2.0e6;
+
+delta_z=0.001e6;
+delta_x=0.001e6;
+//!delta_y=0.1d6
+
+//delta_z=0.1e6;
+//delta_x=0.1e6;
+
+
+//AA=30000.e0;// ! 30km/sec
+
+//!AA=20000
+
+//!AA=2000 ! 2 km/sec
+AA=200; //! .2 km/sec
+
+s_period=30.e0;
+
+//! tdep=sin(qt*2.d0*pi/s_period)*exp(-(s_period/4.d0-qt)**2.d0) 
+
+//!tdep=sin(qt*2.d0*pi/s_period) 
+
+tdep=1.e0;// ! continious rotation
+ 
+if((p->it)==1)
+{
+         xp=(p->xmin[0])+(((real)i)*(p->dx[0]));
+          yp=(p->xmin[1])+(((real)j)*(p->dx[1]));
+ 
+
+
+      //xx=x(ix_1,ix_2,2)-xc2;
+      //zz=x(ix_1,ix_2,1)-xc1;  
+  
+     r1=(xp-xc1)*(xp-xc1);
+     r2=(yp-xc2)*(yp-xc2);
+
+
+        exp_z=exp(-r1/(delta_z*delta_z));
+        exp_x=exp(-r2/(delta_x*delta_x));
+ 
+        
+//!        exp_xyz=exp_x*exp_y*exp_z;
+        exp_xyz=exp_x*exp_z;
+
+    vvz=AA*exp_xyz*tdep;
+
+
+
+
+
+
+    // xc1=-1.0;
+   // xc2=0.0;
+ 
+
+     
+  
+   // s_period=100.0;
+   // tdep=1.00;
+
+
+   
+ 
+ //s_rad1=0.1;
+ //s_rad2=0.02;
+ 
+    //  vvv=tdep*exp(-(r1/(s_rad1*s_rad1))-(r2/(s_rad2*s_rad2)));
+
+      //if(i==3 && j==149)
+      //if(i==3 && j==200)
+     /* {
+                  p->test=vv;
+               p->chyp[0]=xp;
+                p->chyp[1]=yp;
+       }*/
+
+       /* if(i==9 && j==63 && k==63) 
+	{
+                p->test=(w[fencode3_MODID(p,ii,rho)]);
+                p->chyp[0]=vx;
+                p->chyp[1]=vy;
+                p->chyp[2]=(w[fencode3_MODID(p,ii,mom1)]);
+	}*/
+      //if(j>370 && j<680 && i>=0 && i<=10)
+      //   printf("source exp_x exp_z exp_xyz vvz %d %d %g %g %g %g\n",i,j,exp_x,exp_z,exp_xyz,vvz);
+
+ 
+                           w[fencode3_MODID(p,ii,mom1)]=w[fencode3_MODID(p,ii,mom1)]+(p->dt)*vvz*(w[fencode3_MODID(p,ii,rho)]+w[fencode3_MODID(p,ii,rhob)]);
+  
+                          ;//w[fencode3_MODID(p,ii,energy)]=w[fencode3_MODID(p,ii,energy)]+(p->dt)*(vvv*vvv)*(w[fencode3_MODID(p,ii,rho)]+w[fencode3_MODID(p,ii,rhob)])/2.0;
+  }
+
+  return ( status);
+}
+
+__device__ __host__
+int addsourceterms1_MODID(real *dw, real *wd, real *w, struct params *p, struct state *s,int *ii,int field,int dir) {
+
+   
+
+}
+
