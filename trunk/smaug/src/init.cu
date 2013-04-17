@@ -2624,7 +2624,7 @@ checkErrors_i("initgrid memory allocation");
 	    switch(dir)
 	    {
 		     case 0:
-                       ixmax=((*p)->n[0])+1;//ixGmax1+1; 
+ 			    ixmax=((*p)->n[0])+1;//ixGmax1+1;
                        ixmin=((*p)->n[0])-1;//ixmin1=ixGmax1+1                      
 
                       #ifdef USE_MULTIGPU
@@ -2639,6 +2639,8 @@ checkErrors_i("initgrid memory allocation");
 			     for(dir1=0;dir1<NDIM;dir1++)
 			     {
 				     for(ii[0]=ixmin; ii[0]<=ixmax; ii[0]++)
+				     //for(ii[0]=ixmin; ii[0]<ixmax; ii[0]++)
+
 				     for(ii[1]=0; ii[1]<((*p)->n[1])+2; ii[1]++)
 				     		 #ifdef USE_SAC_3D
 						   for(ii[2]=0; ii[2]<((*p)->n[2])+2; ii[2]++)
@@ -2671,7 +2673,8 @@ checkErrors_i("initgrid memory allocation");
                       //lower layers
 
                        ixmin=0;//ixmin1=ixGmin1-1;
-                       ixmax=2;//ixmax1=ixGmin1-1 
+                      // ixmax=2;//ixmax1=ixGmin1-1 
+                        ixmax=1;//ixmax1=ixGmin1-1 
 
                      #ifdef USE_MULTIGPU
 			if(((*p)->fullgridini)==1    ||  ((*p)->mpilowerb[dir])==1) ixmax=0;
@@ -2683,6 +2686,7 @@ checkErrors_i("initgrid memory allocation");
 
 			     for(dir1=0;dir1<NDIM;dir1++)
 			     {
+                                //for(ii[0]=ixmin; ii[0]<ixmax; ii[0]++)
 				     for(ii[0]=ixmin; ii[0]<=ixmax; ii[0]++)
 				     for(ii[1]=0; ii[1]<((*p)->n[1])+2; ii[1]++)
 				     		 #ifdef USE_SAC_3D
@@ -2702,11 +2706,8 @@ checkErrors_i("initgrid memory allocation");
                                                        ii1[0]=ixe;
                                                        ii2[0]=ixf;
 
-
-
-
  
-    ttemp2[encode3p2_i(*p,ip,jp,kp,tmpnui+dir1)]=(1+abs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii1,tmpnui+dir1))])-(abs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii2,tmpnui+dir1))]);
+    ttemp2[encode3p2_i(*p,ip,jp,kp,tmpnui+dir1)]=(1+fabs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii1,tmpnui+dir1))])-(fabs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii2,tmpnui+dir1))]);
 // ttemp2[encode3p2_i(*p,ip,jp,kp,tmpnui+dir1)]= (ttemp2[(fencode3p2_i(*p,ii1,tmpnui+dir1))])+ (ttemp2[(fencode3p2_i(*p,ii2,tmpnui+dir1))]);
    // qx(ix,ixmin2:ixmax2,jdim)=(1+abs(ixe-ix))*qx(ixe,ixmin2:ixmax2,jdim)- abs(ixe-ix) *qx(ixf,ixmin2:ixmax2,jdim)
 
@@ -2762,7 +2763,7 @@ checkErrors_i("initgrid memory allocation");
 
 
 
-						       ttemp2[encode3p2_i(*p,ip,jp,kp,tmpnui+dir1)]=(1+abs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii1,tmpnui+dir1))])-(abs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii2,tmpnui+dir1))]);
+						       ttemp2[encode3p2_i(*p,ip,jp,kp,tmpnui+dir1)]=(1+fabs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii1,tmpnui+dir1))])-(fabs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii2,tmpnui+dir1))]);
 						      //ttemp2[encode3p2_i(*p,ip,jp,kp,tmpnui+dir1)]=(1+abs(ixe-ix))* (wda[fencode3_i(*p,ii1,pos1+dir1)]);
 						  }
 
@@ -2807,7 +2808,7 @@ checkErrors_i("initgrid memory allocation");
 
                                                         
 
-						       ttemp2[encode3p2_i(*p,ip,jp,kp,tmpnui+dir1)]=(1+abs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii1,tmpnui+dir1))])-(abs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii2,tmpnui+dir1))]);
+						       ttemp2[encode3p2_i(*p,ip,jp,kp,tmpnui+dir1)]=(1+fabs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii1,tmpnui+dir1))])-(fabs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii2,tmpnui+dir1))]);
 //write(*,*) jdim,ixe,ixf,ix,ixmin1,ixmax1,ixmin2,ixmax2, qx(ixmin1:ixmax1,ix,jdim),qx(ixmin1:ixmax1,&
 //                   ixe,jdim),qx(ixmin1:ixmax1,ixf,jdim)
 //if((*p)->ipe==0   && ii[0]==0)
@@ -2861,7 +2862,7 @@ checkErrors_i("initgrid memory allocation");
                                                        }
                                                        ii1[2]=ixe;
                                                        ii2[2]=ixf; 
-						       ttemp2[encode3p2_i(*p,ip,jp,kp,tmpnui+dir1)]=(1+abs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii1,tmpnui+dir1))])-(abs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii2,tmpnui+dir1))]);
+						       ttemp2[encode3p2_i(*p,ip,jp,kp,tmpnui+dir1)]=(1+fabs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii1,tmpnui+dir1))])-(fabs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii2,tmpnui+dir1))]);
 						      //ttemp2[encode3p2_i(*p,ip,jp,kp,tmpnui+dir1)]=(1+abs(ixe-ix))* (wda[fencode3_i(*p,ii1,pos1+dir1)]);
 						  }
 
@@ -2904,7 +2905,7 @@ checkErrors_i("initgrid memory allocation");
                                                        }
                                                        ii1[2]=ixe;
                                                        ii2[2]=ixf; 
-						       ttemp2[encode3p2_i(*p,ip,jp,kp,tmpnui+dir1)]=(1+abs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii1,tmpnui+dir1))])-(abs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii2,tmpnui+dir1))]);
+						       ttemp2[encode3p2_i(*p,ip,jp,kp,tmpnui+dir1)]=(1+fabs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii1,tmpnui+dir1))])-(fabs(ixe-ix))* (ttemp2[(fencode3p2_i(*p,ii2,tmpnui+dir1))]);
 						  }
 
 				}
@@ -2942,7 +2943,7 @@ kp=0;
 	
 		     case 1:
 			  (wda[(fencode3_i(*p,ii,pos2))])=ttemp2[encode3p2_i(*p,ip,jp,kp,tmpnui1)];
-//if(ip==1)
+                 //if(ip==1)
                  //       printf("delx 1 %d %d %16.20f  %16.20f \n",ii[0],ii[1],wda[(encode3_i(*p,ip-1,jp-1,kp,delx1))],wda[(encode3_i(*p,ip-1,jp-1,kp,delx2))]);
 
 		     break;
@@ -2985,14 +2986,16 @@ kp=0;
 	    switch(dir)
 	    {
 		     case 0:
-	               // (wda[(encode3_i(*p,ip-1,jp-1,kpo,delx1))])=/*(*p)->dx[0];//*/0.5*(ttemp2[encode3p2_i(*p,ip+1,jp,kp,tmpnui)]-ttemp2[encode3p2_i(*p,ip-1,jp,kp,tmpnui)]);
-                  (wda[(encode3_i(*p,ip-1,jp-1,kpo,delx1))])=/*(*p)->dx[0];//*/0.5*(ttemp2[encode3p2_i(*p,ip+1,jp,kp,tmpnui)]-ttemp2[encode3p2_i(*p,ip-1,jp,kp,tmpnui)]);
+	               (wda[(encode3_i(*p,ip-1,jp-1,kpo,delx1))])=/*(*p)->dx[0];//*/0.5*(ttemp2[encode3p2_i(*p,ip+1,jp,kp,tmpnui)]-ttemp2[encode3p2_i(*p,ip-1,jp,kp,tmpnui)]);
+                      //(wda[(encode3_i(*p,ip-1,jp-1,kpo,delx1))])=/*(*p)->dx[0];//*/0.5*(ttemp2[encode3p2_i(*p,ip+1,jp,kp,tmpnui)]-ttemp2[encode3p2_i(*p,ip-1,jp,kp,tmpnui)]);
 	              //  if(ip==128  && jp==128 && kp==128)
                       //  printf("delx 0 %d %d %d %16.20f  %16.20f   %16.20f \n",ii[0]-1,ii[1]-1,ii[2]-1,wda[(encode3_i(*p,ip-1,jp-1,kp-1,delx1))],wda[(encode3_i(*p,ip-1,jp-1,kp-1,delx2))],wda[(encode3_i(*p,ip-1,jp-1,kp-1,delx3))]);
 		     break;
 	
 		     case 1:
 			(wda[(encode3_i(*p,ip-1,jp-1,kpo,delx2))])=/*(*p)->dx[1];//*/0.5*(ttemp2[encode3p2_i(*p,ip,jp+1,kp,tmpnui1)]-ttemp2[encode3p2_i(*p,ip,jp-1,kp,tmpnui1)]);
+			//(wda[(encode3_i(*p,ip-1,jp-1,kpo,delx2))])=/*(*p)->dx[1];//*/0.5*(ttemp2[encode3p2_i(*p,ip,jp+1,kp,tmpnui1)]-ttemp2[encode3p2_i(*p,ip,jp-1,kp,tmpnui1)]);
+
 	               // if(ip==128  && jp==128 && kp==128)
                        //   printf("delx 1 %d %d %d %16.20f  %16.20f   %16.20f \n",ii[0]-1,ii[1]-1,ii[2]-1,wda[(encode3_i(*p,ip-1,jp-1,kp-1,delx1))],wda[(encode3_i(*p,ip-1,jp-1,kp-1,delx2))],wda[(encode3_i(*p,ip-1,jp-1,kp-1,delx3))]);
 

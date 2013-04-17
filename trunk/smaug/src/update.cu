@@ -113,7 +113,7 @@ __global__ void update_parallel(struct params *p, struct state *s, real *w, real
      #endif           
 	{
             
-                  w[fencode3_u(p,iia,f)]=wmod[fencode3_u(p,iia,f)];
+                ;//  w[fencode3_u(p,iia,f)]=wmod[fencode3_u(p,iia,f)];
                           //   if(p->ipe==0    && f==rho)
                           //      printf("wmod,w %d %d %lg %lg\n",iia[0],iia[1],wmod[fencode3_u(p,iia,f)],w[fencode3_u(p,iia,f)]);
 
@@ -204,78 +204,12 @@ cudaMemcpy(*d_p, *p, sizeof(struct params), cudaMemcpyHostToDevice);
 #endif */ 
 
 
- #ifdef USE_GPUD
-
-	#ifdef USE_SAC_3D
-	   int ndimp=((*p)->n[0])*((*p)->n[1])*((*p)->n[2]);
-        #else
-	   int ndimp= ((*p)->n[0])*((*p)->n[1]);
-	#endif      
-
-     real      *wt=(real *)calloc(ndimp*NVAR,sizeof(real));
  
-
-     int shift,oshift;
-     int ok1,oj1,oi1;
-     int oni,onj,onk;
-     int i1,j1,k1;
-     int ni,nj,nk;
-     real *wa=*w;
-
- 
-     oni=((*p)->n[0])*((*p)->pnpe[0]);
-     onj=((*p)->n[1])*((*p)->pnpe[1]);
-     ni=((*p)->n[0]);
-     nj=((*p)->n[1]);
-
-     #ifdef USE_SAC_3D
-     	onk=((*p)->n[2])*((*p)->pnpe[2]);
-        nk=((*p)->n[2]);
-     #endif
-
-    cudaMemcpy(wt, *d_w, NVAR*ndimp*sizeof(real), cudaMemcpyDeviceToHost);
-
-
-
-     for(int ivar=0; ivar<NVAR; ivar++)
-     {
-
-		#ifdef USE_SAC_3D
-		   for(k1=0; k1<nk; k1++)
-		#endif
-        for(j1=0; j1<nj; j1++)
-        for(i1=0; i1<ni; i1++)
-        {
-                oi1=i1+((*p)->pipe[0]*ni);
-                oj1=j1+((*p)->pipe[1]*nj);  
-		#ifdef USE_SAC_3D
-                         shift=(k1*ni*nj+j1*ni+i1);
-                         ok1=k1+((*p)->pipe[2]*nk);
-
-                         oshift=(ok1*oni*onj+oj1*oni+oi1);
-		#else
-			 shift=(j1*ni+i1);
-                         oshift=(oj1*oni+oi1);
-                #endif
-                 //if(i1==0 && j1==0)
-                 //if(ivar==0 && ((*p)->ipe)==0 && step==5)
-                 // printf("called update %d %d %d %lg %lg\n",ivar,shift,oshift+oni*onj*ivar,wa[oshift+oni*onj*ivar],wt[shift+ivar*ndimp]);//, wa[oshift+oni*onj*ivar]);//,wt[shift]);
-                  
-                   
-              wa[oshift+oni*onj*ivar]=wt[shift+ivar*ndimp];
-                                              
-        }
-     }
-
-       printf("here1\n");   
-          free(wt);
-         // free(wdt);
-#else
 
     //cudaMemcpy(*w, *d_w, NVAR*dimp*sizeof(real), cudaMemcpyDeviceToHost);
-    cudaMemcpy(*wmod, *d_wmod, NVAR*dimp*sizeof(real), cudaMemcpyDeviceToHost);
+    cudaMemcpy(*wmod, *d_wmod, 2*NVAR*dimp*sizeof(real), cudaMemcpyDeviceToHost);
 
-#endif
+
 
 
 

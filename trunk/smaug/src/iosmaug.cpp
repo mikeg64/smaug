@@ -718,7 +718,18 @@ char *method=NULL;
 
 
 
+       /*********************************************************************************************************/
+       /* Apply boundaries */
+       /*********************************************************************************************************/
+	for(int ii=0; ii<=(b1+(NDIM-1)); ii++)
+	for(int idir=0; idir<NDIM; idir++)
+        //for(int ibound=0; ibound<2; ibound++)
+	{
+	   
 
+		       cuboundary(&p, &bp, &d_p, &d_bp, &d_state, &d_wmod, 1,idir,ii);	 
+
+	}
 
 
 
@@ -730,6 +741,19 @@ char *method=NULL;
 	for( n=its;n<=nt;n++)
 	{
 	    p->it=n;
+
+
+	if((p->rkon)==0)
+	{
+	  cucomputedervfields(&p,&d_p,&d_wmod, &d_wd,0);
+        }
+
+         //tc=second();
+         //cuupdate(&p,&w,&wmod,&temp2,&state,&d_p,&d_w,&d_wmod,&d_wtemp2,  &d_state,n);
+         //tcal+=(second()-tc);
+
+
+
 
 
 	    if(((n-1)%(p->cfgsavefrequency))==0)
@@ -821,7 +845,7 @@ char *method=NULL;
 	  order=0;
          tc=second();
          p->qt=(p->qt)+dt;
-	  cucomputedervfields(&p,&d_p,&d_wmod, &d_wd,order);
+	 // cucomputedervfields(&p,&d_p,&d_wmod, &d_wd,order);
 	  
 	 for(int dir=0;dir<NDIM; dir++)
 	 {
@@ -843,7 +867,7 @@ char *method=NULL;
 		       cucomputept(&p,&d_p,&d_wmod, &d_wd,order,dir);
                        cucomputepbg(&p,&d_p,&d_wmod, &d_wd,order,dir);
                      }
-		      cucentdiff1(&p,&d_p,&d_state,&d_wmod,&d_wmod, &d_dwn1, &d_wd,order,ordero,p->dt,f,dir);	     
+		     cucentdiff1(&p,&d_p,&d_state,&d_wmod,&d_wmod, &d_dwn1, &d_wd,order,ordero,p->dt,f,dir);	     
 		  } //end looping over fields for cucentdiff1
 		   #ifndef ADIABHYDRO
 		   for(int f=energy; f<=(b1+(NDIM-1)); f++)
@@ -1047,7 +1071,10 @@ char *method=NULL;
           tc=second();
           cusource(&p,&d_p,&d_state,&d_w,&d_wmod, &d_dwn1, &d_wd,order, ordero,p->dt);
                 tcal+=(second()-tc);
-	  //cuboundary(&p,&bp,&d_p,&d_bp,&d_state,&d_wmod, ordero,0,0);
+	for(int ii=0; ii<=(b1+(NDIM-1)); ii++)
+	for(int idir=0; idir<NDIM; idir++)
+        //for(int ibound=0; ibound<2; ibound++)
+	  cuboundary(&p,&bp,&d_p,&d_bp,&d_state,&d_wmod, ordero,idir,ii);
 
 	} //end of if((p->rkon)==0)
        /*********************************************************************************************************/

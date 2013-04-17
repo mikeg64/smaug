@@ -47,15 +47,16 @@ int shift=order*NVAR*dimp;
      iia[1]=jp;
      k=0;
 
-      for( f=rho; f<=b2; f++)
-      {  
+      //for( f=rho; f<=b2; f++)
+      //{  
+      f=field;
 	       if(i<((p->n[0])) && j<((p->n[1]))) 
 		{
 		       bc3_periodic1_dir_b(wmod+order*NVAR*dimp,p,iia,f,dir);  //for OZT
 		       //  bc3_cont_cd4_b(wmod+order*NVAR*dimp,p,iia,f);  //for BW
 		       //  bc3_fixed_b(wmod+order*NVAR*dimp,p,iia,f,0.0);
 		}
-       }
+       //}
 
  __syncthreads();
 

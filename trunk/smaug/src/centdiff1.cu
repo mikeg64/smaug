@@ -137,7 +137,7 @@ int computefluxrho (real *dw, real *wd, real *w, struct params *p,int *ii,int di
       wd[fencode3_cd1(p,ii,flux)]=0.0;
  
          #if defined USE_SAC || defined USE_SAC_3D
-	      wd[fencode3_cd1(p,ii,flux)]= transportflux(dw,wd,w,p,ii,rho,direction)+(w[fencode3_cd1(p,ii,rhob)]*w[fencode3_cd1(p,ii,mom1+direction)])/(w[fencode3_cd1(p,ii,rhob)]+w[fencode3_cd1(p,ii,rho)]);
+	      wd[fencode3_cd1(p,ii,flux)]=  transportflux(dw,wd,w,p,ii,rho,direction)+(w[fencode3_cd1(p,ii,rhob)]*w[fencode3_cd1(p,ii,mom1+direction)])/(w[fencode3_cd1(p,ii,rhob)]+w[fencode3_cd1(p,ii,rho)]);
          #else
              wd[fencode3_cd1(p,ii,flux)]= transportflux(dw,wd,w,p,ii,rho,direction);
          #endif
@@ -174,7 +174,7 @@ int computefluxmom2 (real *dw, real *wd, real *w, struct params *p,int *ii, int 
                wd[fencode3_cd1(p,ii,flux)]=0.0;
  
         #ifdef USE_SAC
-    		wd[fencode3_cd1(p,ii,flux)]+= transportflux(dw,wd,w,p,ii,field,direction)+fluxmom11(dw,wd,w,p,ii,field,direction);
+    		wd[fencode3_cd1(p,ii,flux)]+=  transportflux(dw,wd,w,p,ii,field,direction)+fluxmom11(dw,wd,w,p,ii,field,direction);
 
  
         #endif
@@ -207,7 +207,7 @@ int computefluxmom1 (real *dw, real *wd, real *w, struct params *p,int *ii, int 
      		wd[fencode3_cd1(p,ii,flux)]+= transportflux(dw,wd,w,p,ii,field,direction);
         #endif
         #ifdef USE_SAC
-    		wd[fencode3_cd1(p,ii,flux)]+= transportflux(dw,wd,w,p,ii,field,direction)+fluxmom10(dw,wd,w,p,ii,field,direction);
+    		wd[fencode3_cd1(p,ii,flux)]+=  transportflux(dw,wd,w,p,ii,field,direction)+fluxmom10(dw,wd,w,p,ii,field,direction);
  
         #endif
         #ifdef USE_SAC_3D

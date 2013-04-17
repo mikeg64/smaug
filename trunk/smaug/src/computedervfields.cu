@@ -1569,11 +1569,107 @@ __global__ void computedervfields_parallel(struct params *p,   real *wmod, real 
 #endif     
 int dir=0;
 
+ 
+
+/*                if(jp==0 && ip==63)
+                {
+     ii[0]=ip;
+     ii[1]=jp;
+
+             // printf("density at 128,128=%12.10f %d\n", wmod[fencode3_cdf(p,ii,rho)], order);    
+          printf("density at 128,128=%d %d %12.10f %12.10f  \n",ip,jp, wd[fencode3_cdf(p,ii,delx1)], wd[fencode3_cdf(p,ii,delx2)]);          
+}
+
+                if(jp==2 && ip==63)
+                {
+     ii[0]=ip;
+     ii[1]=jp;
+
+             // printf("density at 128,128=%12.10f %d\n", wmod[fencode3_cdf(p,ii,rho)], order);    
+          printf("density at 128,128=%d %d %12.10f %12.10f  \n",ip,jp, wd[fencode3_cdf(p,ii,delx1)], wd[fencode3_cdf(p,ii,delx2)]);          
+}
+
+
+
+                if(jp==255 && ip==63)
+                {
+     ii[0]=ip;
+     ii[1]=jp;
+
+             // printf("density at 128,128=%12.10f %d\n", wmod[fencode3_cdf(p,ii,rho)], order);    
+          printf("density at 128,128=%d %d %12.10f %12.10f  \n", ip,jp,wd[fencode3_cdf(p,ii,delx1)], wd[fencode3_cdf(p,ii,delx2)]);          
+}
+
+
+
+                if(jp==253 && ip==63)
+                {
+     ii[0]=ip;
+     ii[1]=jp;
+
+             // printf("density at 128,128=%12.10f %d\n", wmod[fencode3_cdf(p,ii,rho)], order);    
+          printf("density at 128,128=%d %d %12.10f %12.10f  \n", ip,jp,wd[fencode3_cdf(p,ii,delx1)], wd[fencode3_cdf(p,ii,delx2)]);          
+}
+
+
+
+
+
+
+                if(jp==63 && ip==0)
+                {
+     ii[0]=ip;
+     ii[1]=jp;
+
+             // printf("density at 128,128=%12.10f %d\n", wmod[fencode3_cdf(p,ii,rho)], order);    
+          printf("density at 128,128=%d %d %12.10f %12.10f  \n",ip,jp, wd[fencode3_cdf(p,ii,delx1)], wd[fencode3_cdf(p,ii,delx2)]);          
+}
+
+
+
+                if(jp==63 && ip==2)
+                {
+     ii[0]=ip;
+     ii[1]=jp;
+
+             // printf("density at 128,128=%12.10f %d\n", wmod[fencode3_cdf(p,ii,rho)], order);    
+          printf("density at 128,128=%d %d %12.10f %12.10f  \n",ip,jp, wd[fencode3_cdf(p,ii,delx1)], wd[fencode3_cdf(p,ii,delx2)]);          
+}
+
+
+
+
+
+
+                if(jp==63 && ip==255)
+                {
+     ii[0]=ip;
+     ii[1]=jp;
+
+             // printf("density at 128,128=%12.10f %d\n", wmod[fencode3_cdf(p,ii,rho)], order);    
+          printf("density at 128,128=%d %d %12.10f %12.10f  \n", ip,jp,wd[fencode3_cdf(p,ii,delx1)], wd[fencode3_cdf(p,ii,delx2)]);          
+}
+
+
+
+
+                if(jp==63 && ip==253)
+                {
+     ii[0]=ip;
+     ii[1]=jp;
+
+             // printf("density at 128,128=%12.10f %d\n", wmod[fencode3_cdf(p,ii,rho)], order);    
+          printf("density at 128,128=%d %d %12.10f %12.10f  \n", ip,jp,wd[fencode3_cdf(p,ii,delx1)], wd[fencode3_cdf(p,ii,delx2)]);          
+}*/
+
+
+
 
 
 
 
 if(order == 0)
+{
 
      ii[0]=ip;
      ii[1]=jp;
@@ -1589,15 +1685,25 @@ if(order == 0)
 	{		
                for(int f=vel1; f<=pkb; f++)
                         wd[fencode3_cdf(p,ii,f)]=0; 
+
+                //Here we set the current field values (order==0)to the
+                //values which were updated (order=1)
+                //hence the dimp*NVAR term in wmod on RHS of expression 
 		#ifdef USE_SAC_3D
 		  for(int f=rho; f<=b3; f++)
-                  	//wmod[fencode3_cdf(p,ii,f)+dimp*NVAR]=wmod[fencode3_cdf(p,ii,f)]; 
+                  	//wmod[fencode3_cdf(p,ii,f)+dimp*NVAR]=wmod[fencode3_cdf(p,ii,f)];                    
                         wmod[fencode3_cdf(p,ii,f)]=wmod[fencode3_cdf(p,ii,f)+dimp*NVAR]; 
+
+
+
 
 		#else
 		  for(int f=rho; f<=b2; f++)
                   	//wmod[fencode3_cdf(p,ii,f)+dimp*NVAR]=wmod[fencode3_cdf(p,ii,f)]; 
                          wmod[fencode3_cdf(p,ii,f)]=wmod[fencode3_cdf(p,ii,f)+dimp*NVAR];
+
+
+                      
 		#endif               
 
 
@@ -1615,6 +1721,10 @@ if(order == 0)
 
         }
 
+
+
+
+}
 
                __syncthreads();
 
