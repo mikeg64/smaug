@@ -274,7 +274,7 @@ wd[fencode3_cd2(p,ii,flux)]=0.0;
 wd[fencode3_cd2(p,ii,flux)]= 0.0;
       else
  #if defined USE_SAC  || defined USE_SAC_3D  
-wd[fencode3_cd2(p,ii,flux)]= transportflux_cd2(dw,wd,w,p,ii,field,direction)-(w[fencode3_cd2(p,ii,b1+direction)]+w[fencode3_cd2(p,ii,b1b+direction)])*w[fencode3_cd2(p,ii,mom1)]/(w[fencode3_cd2(p,ii,rho)]+w[fencode3_cd2(p,ii,rhob)])+ (w[fencode3_cd2(p,ii,b1b)])*w[fencode3_cd2(p,ii,mom1+direction)]/(w[fencode3_cd2(p,ii,rho)]+w[fencode3_cd2(p,ii,rhob)]);//+fluxb1(dw,wd,w,p,ii,field,direction);
+wd[fencode3_cd2(p,ii,flux)]=  transportflux_cd2(dw,wd,w,p,ii,field,direction)-(w[fencode3_cd2(p,ii,b1+direction)]+w[fencode3_cd2(p,ii,b1b+direction)])*w[fencode3_cd2(p,ii,mom1)]/(w[fencode3_cd2(p,ii,rho)]+w[fencode3_cd2(p,ii,rhob)])+ (w[fencode3_cd2(p,ii,b1b)])*w[fencode3_cd2(p,ii,mom1+direction)]/(w[fencode3_cd2(p,ii,rho)]+w[fencode3_cd2(p,ii,rhob)]);//+fluxb1(dw,wd,w,p,ii,field,direction);
 
          #endif
 
@@ -913,8 +913,11 @@ __global__ void centdiff2d_parallel(struct params *p, struct state *s, real *w, 
 			     #endif
 			     #ifdef USE_SAC_3D
 				  if(ii[0]<ni    && ii[1]<(nj) && ii[2]<(nk))
-			     #endif   
-                              wmod[fencode3_cd2(p,ii,f)+(ordero*NVAR*dimp)]=wmod[fencode3_cd2(p,ii,f)+(ordero*NVAR*dimp)]-dt*dwn1[fencode3_cd2(p,ii,f)]; 
+			     #endif 
+				{  
+                              wmod[fencode3_cd2(p,ii,f)+(ordero*NVAR*dimp)]=wmod[fencode3_cd2(p,ii,f)+(ordero*NVAR*dimp)]-dt*dwn1[fencode3_cd2(p,ii,f)];
+				  
+				} 
 
 
 
@@ -1140,7 +1143,7 @@ int cucentdiff2(struct params **p, struct params **d_p, struct state **d_s, real
      cudaThreadSynchronize();
 
 
-     centdiff2c_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p,*d_s, *d_w, *d_wmod, *d_dwn1,  *d_wd, order,ordero,dt,field,dir);
+    centdiff2c_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p,*d_s, *d_w, *d_wmod, *d_dwn1,  *d_wd, order,ordero,dt,field,dir);
      cudaThreadSynchronize();
 
 

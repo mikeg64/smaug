@@ -2,7 +2,7 @@
 
 //ozttest
 __device__ __host__
-void init_user_MODID (real *w, struct params *p,int *ii) {
+void init_user_MODID (real *w, real *wd, struct params *p,int *ii) {
                     
                     real b0=1.0;
                     real ptot=5.0/3.0;

@@ -28,30 +28,35 @@ __global__ void boundary_parallel(struct params *p, struct bparams *bp, struct s
   int iia[NDIM];
   int dimp=((p->n[0]))*((p->n[1]));
 
-
- #if defined USE_SAC
-    j=iindex/(ni);
-   i=iindex-(jp*ni);
-#endif  
+  #ifdef USE_SAC_3D
+   kp=iindex/(nj*ni);
+   jp=(iindex-(kp*(nj*ni)))/ni;
+   ip=iindex-(kp*nj*ni)-(jp*ni);
+#else
+    jp=iindex/ni;
+   ip=iindex-(jp*ni);
+#endif   
+  
 
 
 int shift=order*NVAR*dimp;
 
 
 
-     iia[0]=i;
-     iia[1]=j;
+     iia[0]=ip;
+     iia[1]=jp;
      k=0;
 
-      for( f=rho; f<=b2; f++)
-      {  
+      //for( f=rho; f<=b2; f++)
+      //{  
+      f=field;
 	       if(i<((p->n[0])) && j<((p->n[1]))) 
 		{
 		       bc3_periodic1_dir_b(wmod+order*NVAR*dimp,p,iia,f,dir);  //for OZT
 		       //  bc3_cont_cd4_b(wmod+order*NVAR*dimp,p,iia,f);  //for BW
 		       //  bc3_fixed_b(wmod+order*NVAR*dimp,p,iia,f,0.0);
 		}
-       }
+       //}
 
  __syncthreads();
 
@@ -64,16 +69,21 @@ int shift=order*NVAR*dimp;
 
 int cuboundary(struct params **p, struct bparams **bp,struct params **d_p, struct bparams **d_bp, struct state **d_s,  real **d_wmod,  int order,int idir,int field)
 {
-
+//printf("bound\n");
 
  dim3 dimBlock(dimblock, 1);
 
 int numBlocks = ((dimproduct_b(*p)+numThreadsPerBlock-1)) / numThreadsPerBlock;
-if((*p)->boundtype[field][0]==0)
+if((*p)->boundtype[field][0][0]==0)
+{
+//printf("bound 0\n");
     boundary_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p,*d_bp,*d_s, *d_wmod, order,0,field);
-
+}
     cudaThreadSynchronize();
-if((*p)->boundtype[field][1]==0)
+if((*p)->boundtype[field][1][0]==0)
+{
+//printf("bound 1\n");
     boundary_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p,*d_bp,*d_s, *d_wmod, order,1,field);
+}
     cudaThreadSynchronize();
 }
