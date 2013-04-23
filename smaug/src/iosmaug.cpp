@@ -909,6 +909,7 @@ char *method=NULL;
 			tc=second();		      
 			cucomputec(&p,&d_p,&d_wmod, &d_wd,order,dim);
 			cucomputemaxc(&p,&d_p,&d_wmod, &d_wd,order,dim,&wd,&d_wtemp);
+                     //p->cmax=2.0;
 			 tcal+=(second()-tc);
 		      #ifdef USE_MPI
 			      tv=second();

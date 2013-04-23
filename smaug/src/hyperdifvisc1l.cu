@@ -157,7 +157,7 @@ for(unsigned int s=1; s < blockDim.x; s *= 2) {
     if(tid==0)
     {
       cmax[blockIdx.x]=partialResult[0];
-      temp[blockIdx.x]=partialResult[0];
+      //temp[blockIdx.x]=partialResult[0];
      }
     __syncthreads();
 
@@ -1159,7 +1159,7 @@ double *h_cmax;
   dimp=(((*p)->n[0]))*(((*p)->n[1]))*(((*p)->n[2]));
 #endif 
 
-       int NTPB=512;
+       int NTPB=tnumThreadsPerBlock;
    
   int smemSize = NTPB * sizeof(double);
     fn=log(dimp)/log(2.0);
