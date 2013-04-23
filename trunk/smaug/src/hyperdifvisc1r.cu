@@ -157,7 +157,7 @@ for(unsigned int s=1; s < blockDim.x; s *= 2) {
     if(tid==0)
     {
       cmax[blockIdx.x]=partialResult[0];
-      temp[blockIdx.x]=partialResult[0];
+      //temp[blockIdx.x]=partialResult[0];
      }
     __syncthreads();
 
@@ -785,8 +785,8 @@ __global__ void hyperdifvisc1ar_parallel(struct params *p,real *wmod,
 #endif  
 
 int shift=order*NVAR*dimp;
-  __shared__ real wts[512];
-  __shared__ real wms[512];
+ // __shared__ real wts[512];
+ // __shared__ real wms[512];
 
 
 
@@ -1155,7 +1155,7 @@ double *h_cmax;
   dimp=(((*p)->n[0]))*(((*p)->n[1]))*(((*p)->n[2]));
 #endif 
 
-       int NTPB=512;
+       int NTPB=tnumThreadsPerBlock;
    
   int smemSize = NTPB * sizeof(double);
 

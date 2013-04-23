@@ -34,7 +34,11 @@ LD_FLAGS =	-g
 #use -DUSE_IOME to enable IOME
 #CUDACCFLAGS = --ptxas-options=-v -maxrregcount=32 --device-emulation   -DUSE_REAL -DUSE_SAC -DUSE_SHOCKVISC  -DADIABHYDRO -DUSE_VAC -DD1D -DUSE_IOME -DUSE_USERSOURCE -DUSE_SAC_3D -DUSE_DORDER3
 #compiling with  -arch sm_13 enables double precision to be used
+#following used with fermi gpu
 CUDACCFLAGS = --ptxas-options=-v -arch sm_20  -maxrregcount=32 -DUSE_SAC
+
+#folowing used with kepler gpu and cuda-5.0
+#CUDACCFLAGS = --ptxas-options=-v -arch sm_35  -maxrregcount=32 -DUSE_SAC
 CCFLAGS = -DUSE_SAC -DD1D
 
 

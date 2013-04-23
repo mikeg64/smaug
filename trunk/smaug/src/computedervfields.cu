@@ -1078,7 +1078,7 @@ for(unsigned int s=1; s < blockDim.x; s *= 2) {
     if(tid==0)
     {
       cmax[blockIdx.x]=partialResult[0];
-      temp[blockIdx.x]=partialResult[0];
+      //temp[blockIdx.x]=partialResult[0];
      }
      __syncthreads();
 }
@@ -1115,9 +1115,9 @@ __global__ void myreduction0computemaxc_parallel(struct params *p,   real *wmod,
    ip=iindex-(jp*ni);
 #endif
 
-int tnumThreadsPerBlock = 128;
-    
-int numBlocks = (dimp+tnumThreadsPerBlock-1) / tnumThreadsPerBlock;
+//int tnumThreadsPerBlock = numThreadsPerBlock;
+//  int tnumThreadsPerBlock = 128; 
+//int numBlocks = (dimp+tnumThreadsPerBlock-1) / tnumThreadsPerBlock;
   //real temp[dimp];
     // perform first level of reduction,
     // reading from global memory, writing to shared memory
@@ -1185,9 +1185,9 @@ __global__ void myreduction0computemaxcourant_parallel(struct params *p,   real 
    ip=iindex-(jp*ni);
 #endif
 
-int tnumThreadsPerBlock = 128;
+//int tnumThreadsPerBlock = 128;
     
-int numBlocks = (dimp+tnumThreadsPerBlock-1) / tnumThreadsPerBlock;
+//int numBlocks = (dimp+tnumThreadsPerBlock-1) / numThreadsPerBlock;
   //real temp[dimp];
     // perform first level of reduction,
     // reading from global memory, writing to shared memory
@@ -1890,8 +1890,8 @@ int cucomputemaxc(struct params **p,  struct params **d_p, real **d_wmod,  real 
    ndimp=dimp;
 
   //Number threads per block
-  int NTPB=512;
-
+  //int NTPB=512;
+  int NTPB=tnumThreadsPerBlock;
   //Num blocks is determined by size of zeropadded 2^n size array
   int numBlocks = (ndimp+NTPB-1) / NTPB;
 
@@ -2077,7 +2077,7 @@ int cucomputemaxcourant(struct params **p,  struct params **d_p, real **d_wmod, 
      else
        ndimp=dimp;
        
-       int NTPB=512;
+       int NTPB=tnumThreadsPerBlock;
   int numBlocks = (ndimp+NTPB-1) / NTPB;
 
   int smemSize = NTPB * sizeof(double);
