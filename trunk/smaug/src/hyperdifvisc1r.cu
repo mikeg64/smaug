@@ -823,7 +823,7 @@ int shift=order*NVAR*dimp;
 
 
 
-     ii[0]=ip;
+ /*    ii[0]=ip;
      ii[1]=jp;
      i=ii[0];
      j=ii[1];
@@ -844,7 +844,7 @@ int shift=order*NVAR*dimp;
 	
         bc_hyperdifr(wtemp2, p,ii, tmpnui,dim);
 
-   }
+   }*/
 
 
     
@@ -856,6 +856,280 @@ int shift=order*NVAR*dimp;
 
  
 }
+
+
+
+
+
+
+
+
+__global__ void hyperdifvisc1arb0_parallel(struct params *p,real *wmod, 
+     real *wd, int order, real *wtemp, real *wtemp1, real *wtemp2, int field, int dim)
+{
+
+  int iindex = blockIdx.x * blockDim.x + threadIdx.x;
+  const int blockdim=blockDim.x;
+  const int SZWT=blockdim;
+  const int SZWM=blockdim*NVAR;
+  int tid=threadIdx.x;
+  int i,j,iv;
+  int is,js;
+  int index,k;
+  int ni=p->n[0];
+  int nj=p->n[1];
+  real dt=p->dt;
+  real dy=p->dx[1];
+  real dx=p->dx[0];
+  real maxt=0,max3=0, max1=0;
+  
+   int ip,jp;
+  int ii[NDIM];
+  int dimp=((p->n[0]))*((p->n[1]));
+ #ifdef USE_SAC_3D
+   int kp;
+   real dz=p->dx[2];
+   dimp=((p->n[0]))*((p->n[1]))*((p->n[2]));
+#endif  
+   //int ip,jp,ipg,jpg;
+
+  #ifdef USE_SAC_3D
+   kp=iindex/(nj*ni);
+   jp=(iindex-(kp*(nj*ni)))/ni;
+   ip=iindex-(kp*nj*ni)-(jp*ni);
+#else
+    jp=iindex/ni;
+   ip=iindex-(jp*ni);
+#endif  
+
+int shift=order*NVAR*dimp;
+ // __shared__ real wts[512];
+ // __shared__ real wms[512];
+
+
+     ii[0]=ip;
+     ii[1]=jp;
+     i=ii[0];
+     j=ii[1];
+     k=0;
+     #ifdef USE_SAC_3D
+	   ii[2]=kp;
+           k=ii[2];
+     #endif
+
+is=1;
+field=tmpnui;
+  
+
+ #ifdef USE_SAC
+   if(   (i==(p->n[0])-1)   && j>=0   && j<(p->n[1])           )
+   {
+      //for(int is=0;is<3-2*(j<((p->n[1])-1));is++)   
+         wtemp2[encode3p2_hdv1r(p,i+2,j+is,k,field)]=wtemp2[encode3p2_hdv1r(p,(p->n[0])-5,j+is,k,field)];
+         
+   }
+ 
+  if( (i==0)    && j>0   && j<((p->n[1]))   )
+    //for(int is=0;is<3-2*(j<((p->n[1])-1));is++)
+       wtemp2[encode3p2_hdv1r(p,0,j+is,k,field)]=wtemp2[encode3p2_hdv1r(p,6,j+is,k,field)];
+
+#endif
+ #ifdef USE_SAC_3D
+   if(   (i==(p->n[0])-1)   && j>0   && j<(p->n[1])      && k>0   && k<(p->n[2])     )
+         wtemp2[encode3p2_hdv1r(p,i+2,j+is,k+is,field)]=wtemp2[encode3p2_hdv1r(p,(p->n[0])-5,j+is,k+is,field)];
+ 
+  if( (i==0)    && j>0   && j<((p->n[1])) && k>0   && k<((p->n[2]))  )
+       wtemp2[encode3p2_hdv1r(p,0,j+is,k+is,field)]=wtemp2[encode3p2_hdv1r(p,6,j+is,k+is,field)];
+#endif
+
+    
+   //__syncthreads();
+
+
+
+
+
+ 
+}
+
+
+
+
+
+__global__ void hyperdifvisc1arb1_parallel(struct params *p,real *wmod, 
+     real *wd, int order, real *wtemp, real *wtemp1, real *wtemp2, int field, int dim)
+{
+
+  int iindex = blockIdx.x * blockDim.x + threadIdx.x;
+  const int blockdim=blockDim.x;
+  const int SZWT=blockdim;
+  const int SZWM=blockdim*NVAR;
+  int tid=threadIdx.x;
+  int i,j,iv;
+  int is,js;
+  int index,k;
+  int ni=p->n[0];
+  int nj=p->n[1];
+  real dt=p->dt;
+  real dy=p->dx[1];
+  real dx=p->dx[0];
+  real maxt=0,max3=0, max1=0;
+  
+   int ip,jp;
+  int ii[NDIM];
+  int dimp=((p->n[0]))*((p->n[1]));
+ #ifdef USE_SAC_3D
+   int kp;
+   real dz=p->dx[2];
+   dimp=((p->n[0]))*((p->n[1]))*((p->n[2]));
+#endif  
+   //int ip,jp,ipg,jpg;
+
+  #ifdef USE_SAC_3D
+   kp=iindex/(nj*ni);
+   jp=(iindex-(kp*(nj*ni)))/ni;
+   ip=iindex-(kp*nj*ni)-(jp*ni);
+#else
+    jp=iindex/ni;
+   ip=iindex-(jp*ni);
+#endif  
+
+int shift=order*NVAR*dimp;
+ // __shared__ real wts[512];
+ // __shared__ real wms[512];
+
+
+     ii[0]=ip;
+     ii[1]=jp;
+     i=ii[0];
+     j=ii[1];
+     k=0;
+     #ifdef USE_SAC_3D
+	   ii[2]=kp;
+           k=ii[2];
+     #endif
+
+  is=1;
+field=tmpnui;
+
+
+ #ifdef USE_SAC
+if( (j==(p->n[1])-1)    && i>0   && i<((p->n[0]))  )
+    //for(int is=0;is<3-2*(j<((p->n[1])-1));is++)
+       wtemp2[encode3p2_hdv1r(p,i+is,j+2,k,field)]=wtemp2[encode3p2_hdv1r(p,i+is,(p->n[1])-5,k,field)];
+ if( (j==0)    && i>0   && i<((p->n[0]))   )
+    //for(int is=0;is<3-2*(j<((p->n[1])-1));is++)
+       wtemp2[encode3p2_hdv1r(p,i+is,0,k,field)]=wtemp2[encode3p2_hdv1r(p,i+is,6,k,field)];
+
+#endif
+ #ifdef USE_SAC_3D
+   else if( (j==(p->n[1])-1)    && i>0   && i<((p->n[0])) && k>0   && k<((p->n[2]))  )
+       wtemp2[encode3p2_hdv1r(p,i+is,j+2,k+is,field)]=wtemp2[encode3p2_hdv1r(p,i+is,(p->n[1])-5,k+is,field)];
+   else if( (j==0)    && i>0   && i<((p->n[0]))  && k>0   && k<((p->n[2]))  )
+       wtemp2[encode3p2_hdv1r(p,i+is,0,k+is,field)]=wtemp2[encode3p2_hdv1r(p,i+is,6,k+is,field)];
+#endif
+
+    
+   //__syncthreads();
+
+
+
+
+
+ 
+}
+
+
+
+
+
+__global__ void hyperdifvisc1arb2_parallel(struct params *p,real *wmod, 
+     real *wd, int order, real *wtemp, real *wtemp1, real *wtemp2, int field, int dim)
+{
+
+  int iindex = blockIdx.x * blockDim.x + threadIdx.x;
+  const int blockdim=blockDim.x;
+  const int SZWT=blockdim;
+  const int SZWM=blockdim*NVAR;
+  int tid=threadIdx.x;
+  int i,j,iv;
+  int is,js;
+  int index,k;
+  int ni=p->n[0];
+  int nj=p->n[1];
+  real dt=p->dt;
+  real dy=p->dx[1];
+  real dx=p->dx[0];
+  real maxt=0,max3=0, max1=0;
+  
+   int ip,jp;
+  int ii[NDIM];
+  int dimp=((p->n[0]))*((p->n[1]));
+ #ifdef USE_SAC_3D
+   int kp;
+   real dz=p->dx[2];
+   dimp=((p->n[0]))*((p->n[1]))*((p->n[2]));
+#endif  
+   //int ip,jp,ipg,jpg;
+
+  #ifdef USE_SAC_3D
+   kp=iindex/(nj*ni);
+   jp=(iindex-(kp*(nj*ni)))/ni;
+   ip=iindex-(kp*nj*ni)-(jp*ni);
+#else
+    jp=iindex/ni;
+   ip=iindex-(jp*ni);
+#endif  
+
+int shift=order*NVAR*dimp;
+ // __shared__ real wts[512];
+ // __shared__ real wms[512];
+
+
+     ii[0]=ip;
+     ii[1]=jp;
+     i=ii[0];
+     j=ii[1];
+     k=0;
+     #ifdef USE_SAC_3D
+	   ii[2]=kp;
+           k=ii[2];
+     #endif
+
+  
+
+is=1;
+field=tmpnui;
+
+
+
+ #ifdef USE_SAC_3D
+ 
+   if( (k==(p->n[2])-1)    && i>0   && i<((p->n[0])) && j>0   && j<((p->n[1]))  )
+       wtemp2[encode3p2_hdv1r(p,i+is,j+is,k+2,field)]=wtemp2[encode3p2_hdv1r(p,i+is,j+is,(p->n[2])-5,field)];
+   if( (k==0)    && i>0   && i<((p->n[0])) && j>0   && j<((p->n[1]))   )
+       wtemp2[encode3p2_hdv1r(p,i+is,j+is,0,field)]=wtemp2[encode3p2_hdv1r(p,i+is,j+is,6,field)];
+#endif
+
+    
+   //__syncthreads();
+
+
+
+
+
+ 
+}
+
+
+
+
+
+
+
+
+
+
 
 
 __global__ void hyperdifvisc1r_parallel(struct params *p,real *wmod, 
@@ -1186,6 +1460,30 @@ double *h_cmax;
      cudaThreadSynchronize();
      hyperdifvisc1ar_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p, *d_wmod,   *d_wd, order, *d_wtemp,*d_wtemp1,*d_wtemp2, field, dim);
      cudaThreadSynchronize();
+
+
+if(dim==0)
+{
+     hyperdifvisc1arb0_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p, *d_wmod,   *d_wd, order, *d_wtemp,*d_wtemp1,*d_wtemp2, field, dim);
+     cudaThreadSynchronize();
+}
+
+if(dim==1)
+{
+     hyperdifvisc1arb1_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p, *d_wmod,   *d_wd, order, *d_wtemp,*d_wtemp1,*d_wtemp2, field, dim);
+     cudaThreadSynchronize();
+}
+
+if(dim==2)
+{
+     hyperdifvisc1arb2_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p, *d_wmod,   *d_wd, order, *d_wtemp,*d_wtemp1,*d_wtemp2, field, dim);
+     cudaThreadSynchronize();
+}
+
+
+
+
+
      hyperdifvisc2r_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p, *d_wmod,   *d_wd, order, *d_wtemp,*d_wtemp1,*d_wtemp2, field, dim);
      cudaThreadSynchronize();
      hyperdifvisc3r_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p, *d_wmod,   *d_wd, order, *d_wtemp,*d_wtemp1,*d_wtemp2, field, dim);
