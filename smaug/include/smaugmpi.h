@@ -1,6 +1,6 @@
 #include "mpi.h"
 #include "iotypes.h"
-#include "smaugcukernels.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -27,8 +27,7 @@ MPI::Request *gmpirequest;
 
 int sacencodempivisc0 (struct params *p,int ix, int iy, int iz, int bound,int dim) {
   #ifdef USE_SAC_3D
-    return (
-         bound* (  ((p->n[1])+2)*((p->n[2])+2))      )+   ((iy+iz*((p->n[1])+2))) );
+    return (  bound* ((   ((p->n[1])+2)*((p->n[2])+2)   ))+       (    (     iy+iz*((p->n[1])+2)    )    )      );
   #else
     return (   bound*(    ((p->n[1])+2)  )  +   iy     );
   #endif
@@ -38,28 +37,29 @@ int sacencodempivisc0 (struct params *p,int ix, int iy, int iz, int bound,int di
 
 int sacencodempivisc1 (struct params *p,int ix, int iy, int iz, int bound,int dim) {
   #ifdef USE_SAC_3D
-    return (
-         bound* (((p->n[0])+2)*((p->n[2])+2))      )+   ((ix+iz*((p->n[0])+2)))  );
+    return (bound* ((   ((p->n[0])+2)*((p->n[2])+2))      )+   ((ix+iz*((p->n[0])+2)))  );
   #else
     return (   bound*(    ((p->n[0])+2)  )  +   ix     );
   #endif
+
+  return 0;
 }
 
 
 int sacencodempivisc2 (struct params *p,int ix, int iy, int iz, int bound,int dim) {
   #ifdef USE_SAC_3D
-    return (
-bound* (((p->n[0])+2)*((p->n[1])+2))      )+   (  (ix+iy*((p->n[0])+2))    ));
+    return (bound* ((   ((p->n[0])+2)*((p->n[1])+2))      )+   (  (ix+iy*((p->n[0])+2))    ));
   #endif
+  return 0;
 }
 
 int sacencodempiw0 (struct params *p,int ix, int iy, int iz, int field,int bound) {
   #ifdef USE_SAC_3D
-    return (4*field*(         ((p->n[1])*(p->n[2]))   )+
-bound*(            +  ((p->n[1])*(p->n[2]))      )+   (  (iy+iz*(p->n[1]))    ));
+    return (4*field*(         ((p->n[1])*(p->n[2]))   )+bound*(            +  ((p->n[1])*(p->n[2]))      )+   (  (iy+iz*(p->n[1]))    ));
   #else
     return (4*field*(p->n[1]) +bound*((p->n[1]))  +   (iy));
   #endif
+  return 0;
 }
 
 int sacencodempiw1 (struct params *p,int ix, int iy, int iz, int field,int bound) {
@@ -69,6 +69,7 @@ bound*(            +  ((p->n[0])*(p->n[2]))      )+   (  (ix+iz*(p->n[0]))    ))
   #else
     return (4*field*(p->n[0]) +bound*((p->n[0]))  +   (ix));
   #endif
+return 0;
 }
 
 
@@ -77,6 +78,7 @@ int sacencodempiw2 (struct params *p,int ix, int iy, int iz, int field,int bound
     return (4*field*(         ((p->n[0])*(p->n[1]))   )+
 bound*(            +  ((p->n[0])*(p->n[1]))      )+   (  (ix+iy*(p->n[0]))    ));
   #endif
+   return 0;
 }
 
 int encode3p2_sacmpi (struct params *dp,int ix, int iy, int iz, int field) {
@@ -87,6 +89,7 @@ int encode3p2_sacmpi (struct params *dp,int ix, int iy, int iz, int field) {
   #else
     return ( (iy * (((dp)->n[0])+2) + ix)+(field*(((dp)->n[0])+2)*(((dp)->n[1])+2)));
   #endif
+  return 0;
 }
 
 /*void mpiinit(params *p);
@@ -292,9 +295,9 @@ void ipe2iped(params *p)
 //mpiupperB(2)=ipe2<npe2-1
 //mpilowerB(2)=ipe2>0 
 
-(p->mpiupperb[0])=(p->pipe[0])<((p->npe[0]-1);
-(p->mpiupperb[1])=(p->pipe[1])<((p->npe[1]-1);
-(p->mpiupperb[2])=(p->pipe[2])<((p->npe[2]-1);
+(p->mpiupperb[0])=(p->pipe[0])<((p->pnpe[0])-1);
+(p->mpiupperb[1])=(p->pipe[1])<((p->pnpe[1])-1);
+(p->mpiupperb[2])=(p->pipe[2])<((p->pnpe[2])-1);
 
 (p->mpilowerb[0])=(p->pipe[0])>0;
 (p->mpilowerb[1])=(p->pipe[1])>0;

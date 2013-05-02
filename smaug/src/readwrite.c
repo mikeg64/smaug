@@ -1,5 +1,29 @@
 #include "../include/readwrite.h"
 
+unsigned long int encode3_rw(params *dp,int ix, int iy, int iz, int field) {
+
+
+  #ifdef USE_SAC_3D
+    return ( (iz*((dp)->n[0])*((dp)->n[1])  + iy * ((dp)->n[0]) + ix)+(field*((dp)->n[0])*((dp)->n[1])*((dp)->n[2])));
+  #else
+    return ( (iy * ((dp)->n[0]) + ix)+(field*((dp)->n[0])*((dp)->n[1])));
+  #endif
+}
+
+unsigned long int fencode3_rw (struct params *dp,int *ii, int field) {
+
+
+#ifdef USE_SAC_3D
+   return (ii[2]*((dp)->n[0])*((dp)->n[1])  + ii[1] * ((dp)->n[0]) + ii[0]+(field*((dp)->n[0])*((dp)->n[1])*((dp)->n[2])));
+#else
+   return ( ii[1] * ((dp)->n[0]) + ii[0]+(field*((dp)->n[0])*((dp)->n[1])));
+#endif
+
+}
+
+
+
+
 void freadl(FILE *stream, char **string)
 {    
     unsigned long counter = 0;
@@ -52,7 +76,7 @@ int appendlog(char *logfile, params p, state s)
       FILE *fdt=0;
 
       fdt=fopen(logfile,"a+");
-      fprintf(fdt,"%d %f %f %f %f %f %f %f %f %f %f %f\n",s.it,
+      fprintf(fdt,"%d %f %f %f %f %f %f %f %f %f %f\n",s.it,
                s.t,s.dt,s.rho,s.m1,s.m2,s.m3,s.e,s.b1,s.b2,s.b3);
       fclose(fdt);
   return status;
@@ -570,7 +594,7 @@ int readbinvacconfig(char *name,params p, meta md, real *w,real *wd, state st)
   long lsize;
   size_t result;
 
-  char *bigbuf;
+  //char *bigbuf;
   ni=p.n[0];
   nj=p.n[1];
     #ifdef USE_SAC_3D
@@ -608,7 +632,7 @@ int readbinvacconfig(char *name,params p, meta md, real *w,real *wd, state st)
       fread(dbuffer,sizeof(double),1,fdt);
       st.it=ibuffer[0]=st.it;
       st.t=dbuffer[0]=st.t;
-      printf("st.it=%f st.t=%d\n",st.it,st.t);
+      printf("st.it=%d st.t=%f\n",st.it,st.t);
       fread(ibuffer,sizeof(int),3,fdt);
 
       //fread(ibuffer,sizeof(int)*3,1,fdt);
@@ -741,7 +765,7 @@ for( j1=0;j1<nj;j1++)
 
       // printf("read bin vac read fields\n");
       fclose(fdt);
-      free(bigbuf);
+      //free(bigbuf);
   return status;
 
 
@@ -1061,10 +1085,10 @@ int writeasciivacconfig(char *cfgfile, params p, meta md, real *w,real *wd, char
 {
   int status=0;
   int i;
-  int i1,j1;
-  int ni,nj;                         
+  int i1,j1,k1;
+  int ni,nj,nk;                         
   int shift;
-  real x,y,val;
+  real x,y,z,val;
 
   int iif,jf,kf;
   int is,js,ks;
@@ -1296,7 +1320,7 @@ int createconfigsegment(params p,  real *wnew,real *wdnew, real *w,real *wd)
   int status=0;
   int i,var;
   int i1,j1,k1;
-  int ni,nj;                         
+  int ni,nj,nk;                         
   int shift,tvar;
   real x,y,val;
 
@@ -1369,7 +1393,7 @@ int gathersegment(params p,  real *wnew,real *wdnew, real *w,real *wd)
   int status=0;
   int i,var;
   int i1,j1,k1;
-  int ni,nj;                         
+  int ni,nj,nk;                         
   int shift;
   real x,y,val;
 
@@ -1387,7 +1411,7 @@ int gathersegment(params p,  real *wnew,real *wdnew, real *w,real *wd)
 int oi1,oj1,ok1;
 int oshift;
 
-   #ifdef USE_SAC3D
+   #ifdef USE_SAC_3D
    nk=p.n[2];
    onk=nk*(p.pnpe[2]);
 
