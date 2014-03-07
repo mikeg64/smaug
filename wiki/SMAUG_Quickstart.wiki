@@ -240,3 +240,9 @@ initialisation_user.h  Allows the user to provide custom code generating a confi
 
 The developers may be contacted and issues may be raised on the project web site at 
 [http://code.google.com/p/smaug/ http://code.google.com/p/smaug/]
+
+
+
+WikiWordLink
+[https://docs.google.com/a/sheffield.ac.uk/open?id=0B-AKVl-pk6zid1FqZ1J2UHBXZEU configs.tgz]
+configs.tgz
