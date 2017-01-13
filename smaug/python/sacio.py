@@ -1,5 +1,6 @@
 import numpy as np
 
+
 #filename='../../../configs/hydro/3D_128_spic_asc.ini'
 
 #called as
@@ -99,10 +100,7 @@ def read_sac_ascii(filename):
 
 def write_sac_ascii(filename, alldat, modelinfo):
     
-    file = open(filename,'wb')
-    
-    
-    
+    file = open(filename,'wb')    
     
     #this script assumes data has been read using a routine such as sac-read3-ascii.py
     #the following variables are assumed
@@ -127,7 +125,16 @@ def write_sac_ascii(filename, alldat, modelinfo):
     
     #header='sac_test_asc'
     header=modelinfo[0]
-    
+    #modelinfo=(header,nits, time, ndim, nvar, nfields,dim,head3,head4)
+    #dim=[128,128]
+    #ndim=2
+    #nfields=12
+    dim=modelinfo[6]
+    ndim=modelinfo[3]
+    nfields=modelinfo[5]
+    time=modelinfo[2]
+    nits=modelinfo[1]
+    nvar=modelinfo[4]
     
     
     head1=str(nits)+" "+str(time)+" "+str(ndim)+" "+str(nvar)+" "+str(nfields)
@@ -144,10 +151,70 @@ def write_sac_ascii(filename, alldat, modelinfo):
         head4="x y h m1 m2 e b1 b2 eb rhob bg1 bg2   gamma eta   grav1 grav2"
     elif ndim==3:
         head4="x y z h m1 m2 m3 e b1 b2 b3 eb rhob bg1 bg2 bg3   gamma eta   grav1 grav2 grav3"
+    
+    file.write(header)
+    file.write(head1+"\n")     
+    file.write(head2+"\n")
+    file.write(head3+"\n")
+    file.write(head4+"\n")     
         
-    for i1 in range(dim[0]*dim[1]*dim[2]):
-        for i2 in range(dim[0]*dim[1]*dim[2]):
-            for i3 in range(dim[0]*dim[1]*dim[2]):
+    if ndim==3:    
+        for i3 in range(dim[2]):
+            for i2 in range(dim[1]):
+                for i1 in range(dim[0]):
+                    line=""
+                    for j in range(ndim+nfields):
+                        line=line+str(alldat[i1,i2,i3,j])
+                    line=line+"\n"
+                    file.write(line)
+                    
+    if ndim==2:    
+        for i2 in range(dim[1]):
+            for i1 in range(dim[0]):
                 line=""
-                for j in range(ndim+nfields):
-                    line=line+str(alldat[i1,i2,i3,j])
+                for j in range(ndim+nfields):              
+                    line=line+" "+str(alldat[i1,i2,j])
+                line=line+"\n"
+                file.write(line)    
+                
+def read_sac_bin(filename):
+    file = open(filename,'rb')
+        
+    file.seek(0,2)
+    eof = file.tell()
+    file.seek(0,0)
+    
+    
+    header = file.read(79)
+    
+    nits = np.fromfile(file,dtype=np.int32,count=1)
+    
+    time = np.fromfile(file,dtype=np.float64,count=1)
+    ndim=np.fromfile(file,dtype=np.int32,count=1)
+    nvar=np.fromfile(file,dtype=np.int32,count=1)
+    nfields=np.fromfile(file,dtype=np.int32,count=1)
+    
+    dim = np.fromfile(file,dtype=np.int32,count=ndim)[:ndim]
+    
+    varbuf = np.fromfile(file,dtype=float,count=7)[:7]
+    
+    #if ndim=2
+    head4 = file.read(79)
+    
+    #if ndim=3
+    head3=''
+    for i in range(7):
+        head3=head3+str(varbuf[i])
+                  
+     #typedef enum vars {rho, mom1, mom2, mom3, energy, b1, b2, b3,energyb,rhob,b1b,b2b,b3b} CEV;
+    
+    if ndim==3:
+        alldat=np.fromfile(file,dtype=float,count=(nfields+ndim)*dim[0]*dim[1]*dim[2])[:(nfields+ndim)*dim[0]*dim[1]*dim[2]]
+        #if size(alldat)<(nw+ndim)*ndata[0]*ndata[1]*ndata[2]:
+        #    alldat=resize(alldat,(nw+ndim)*ndata[0]*ndata[1]*ndata[2])
+        alldat=np.reshape(alldat,(nfields+ndim,dim[0],dim[1],dim[2],),'C')   
+        
+    file.close()
+    modelinfo=(header,nits, time, ndim, nvar, nfields,dim,head3,head4)
+
+    return alldat,modelinfo
