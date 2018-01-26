@@ -16,6 +16,9 @@ DEFINE_PRECISION(double)
 
 #undef DEFINE_PRECISION
 
+#define BIGDOUBLE 9.9e12
+#define SMALLDOUBLE 1.0e-12
+
 
 #define NDIM 2
 #define NVECDIM 3
