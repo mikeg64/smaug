@@ -771,7 +771,7 @@ __global__ void grav_parallel(struct params *p, struct state *s, real *w, real *
      #else
        if(ii[0]<(p->n[0])-2 && ii[1]<(p->n[1])-2)
      #endif
-                                addgrav_cd2(dwn1,wd,w,wmod+ordero*NVAR*dimp,p,ii);
+                                addgrav_cd2(dwn1,wd,wmod+order*NVAR*dimp,wmod+ordero*NVAR*dimp,p,ii);
 
 
 

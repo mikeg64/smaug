@@ -1368,8 +1368,8 @@ numBlocks = (ndimp+NTPB-1) / NTPB;
   cudaMalloc((void**)&d_cmax, numBlocks*sizeof(double)); 
   cudaMalloc((void**)&d_bmax, numBlocks*sizeof(double)); 
 
-     //maxviscoef=(*p)->maxviscoef;
-     maxviscoef=SMALLDOUBLE;
+     maxviscoef=(*p)->maxviscoef;
+     //maxviscoef=SMALLDOUBLE;
      
      zeropadmaxviscr_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p, *d_wmod,  *d_wd, order, dim, *d_wtemp,ndimp);
       cudaThreadSynchronize();
