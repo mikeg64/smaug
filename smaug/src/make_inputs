@@ -1,10 +1,10 @@
 #make include file for building StarSimulation IoSimTestSimple on Felix
 # Standard defines:
-CC  	=	g++
+CC  	=	nvcc # normally g++
 ##CC  	=	mpiCC
 NVCC  	=	nvcc
 FF  	=	gfortran
-LD  	=	g++
+LD  	=	nvcc #normally g++
 HOMEV	=	..
 VPATH	=	$(HOMEV)/include
 oDir	=	.

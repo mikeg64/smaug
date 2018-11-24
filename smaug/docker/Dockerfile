@@ -11,6 +11,11 @@ RUN apt-get -y update
 RUN apt-get -y upgrade
 RUN apt-get install -y build-essential
 RUN apt-get install -y gfortran
+RUN apt-get install -y vim
+RUN apt-get install -y nano
+RUN apt-get install -y wget
+RUN apt-get install -y curl
+
 #RUN apt-get install -y firefox
 # Run a system update to get it up to speed
 # Then install python3 and pip
