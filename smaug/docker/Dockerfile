@@ -10,6 +10,7 @@ FROM nvidia/cuda:10.0-devel-ubuntu16.04
 RUN apt-get -y update
 RUN apt-get -y upgrade
 RUN apt-get install -y build-essential
+RUN apt-get install -y autotools-dev
 RUN apt-get install -y gfortran
 RUN apt-get install -y vim
 RUN apt-get install -y nano
