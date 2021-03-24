@@ -2,8 +2,7 @@ Guidelines for Using SMAUG Sheffield Magnetohydrodynamics Accelerated Using GPUs
 
 Introduction
 
-Parallel magnetohydrodynamic (MHD) algorithms are important for numerical modelling of highly inhomogeneous solar and astrophysical plasmas. SMAUG is the Sheffield Magnetohydrodynamics Algorithm Using GPUs. SMAUG is a 1-3D MHD code capable of modelling magnetised and gravitationally stratified magnetised plasma. The methods employed have been justied by performance benchmarks and validation results demonstrating that the code successfully simulates the physics for a range of test scenarios including a full 3D realistic model of wave propagation in the magnetised and stratified solar atmosphere. For details about smaug see the preprint at: 
-http://smaug.googlecode.com/files/sac_cuda1_v3test.pdf
+Parallel magnetohydrodynamic (MHD) algorithms are important for numerical modelling of highly inhomogeneous solar and astrophysical plasmas. SMAUG is the Sheffield Magnetohydrodynamics Algorithm Using GPUs. SMAUG is a 1-3D MHD code capable of modelling magnetised and gravitationally stratified magnetised plasma. The methods employed have been justied by performance benchmarks and validation results demonstrating that the code successfully simulates the physics for a range of test scenarios including a full 3D realistic model of wave propagation in the magnetised and stratified solar atmosphere. 
 
 SMAUG is based on the Sheffield Advanced Code (SAC), which is a novel fully non-linear MHD code, designed for simulations of linear and non-linear wave propagation in gravitationally strongly stratified magnetised plasma. See the reference at the Astronomy Abstracts Service. 
 http://adsabs.harvard.edu/abs/2008A%26A...486..655S
@@ -23,46 +22,7 @@ The SMAUG has been developed and tested on a range of different 64 bit (and 32 b
 Guidelines for correct installation of the CUDA toolkit and drivers can be found at
 http://docs.nvidia.com/cuda/cuda-getting-started-guide-for-linux/index.html 
 
-
-Installing SMAUG
-
-SMAUG can be downloaded in 3 ways
-
-   1. Download and extract the latest tarball from the google code site
-   2. Checkout the distribution from the user release version from the google repository. This is recommended if you require regular updates and bugfixes.
-   3. Checkout the distribution from the developer repository. This is recommended if you wish to participate in the development of future code versions.
-
-
-Method 1:
-
-Download the distribution
-http://smaug.googlecode.com/files/smaug_v1_rev257.tgz
-
-Copy the distribution to a suitable directory in your working area and extract the distribution
-tar -zxvf smaug_v1_rev256.tgz
-
-
-Method 2:
-
-Create a directory and from that directory,
-using a subversion client checkout the latest distribution using the command:
-
-# Non-members may check out a read-only working copy anonymously over HTTP.
-svn checkout http://smaug.googlecode.com/svn/trunk/ smaug-read-only
-
-The distribution may be updated by moving to the directory and typing
-svn update
-
-Method 3:
-
-Create a directory and from that directory,
-using a subversion client checkout the latest distribution using the command:
-
-svn checkout http://ccpforge.cse.rl.ac.uk/svn/sac/dev/smaug
-
-when prompted, Password for 'anonymous' just press return.
-
-
+git clone https://github.com/mikeg64/smaug
 
 Building and running a Model
 
