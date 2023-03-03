@@ -68,7 +68,7 @@ DEFINE_PRECISION(double)
  #endif
 
 #define PI 3.14159265358979
-struct Meta {
+struct meta {
    char *directory ;
    char *author;
    char *sdate;
@@ -80,11 +80,7 @@ struct Meta {
    char *out_file;
 };
 
-struct Iome {
-    char *server;
-    int port;
-    int id;
-};
+
 
 struct params {
 	int n[NDIM];
@@ -100,7 +96,7 @@ struct params {
         real emax;
         real emin;
         real emean;
-        
+
 
         real xmax[NDIM];
         real xmin[NDIM];
@@ -115,7 +111,7 @@ struct params {
         real cmax;
         real maxcourant;
         int steeringenabled;
-        int finishsteering;     
+        int finishsteering;
 	real dt;
         real dx[NDIM];
 
@@ -136,7 +132,7 @@ struct params {
         int divbon;
         int divbfix;
         int cfgsavefrequency;
-        int hyperdifmom; 
+        int hyperdifmom;
         int mode;
         int readini;
         real courant;
@@ -144,15 +140,15 @@ struct params {
         real dtdiffvisc;
         real chyp[NVAR];
         real chyp3;
-        real test;  
+        real test;
         int boundtype[NVAR][NDIM][2];  //boundtype=0 is periodic 1=mpi 2=mpiperiod 3=cont contcd4=4  fixed=5 symm=6 asymm=7
-        
+
         int gpid[16];
         int npe;
         int noghost;
        #ifdef USE_MULTIGPU
 		int ipe;
-	
+
                 int pnpe[NDIM];
                 int pipe[NDIM];
                 int mpiupperb[NDIM];
@@ -162,20 +158,20 @@ struct params {
                 int ngpudirectgroups;
 
                 int gpudirectgroupneighb[2][NDIM]; //gpudirect group ID for each neighbour
-                
-                //nearest neighbours                
+
+                //nearest neighbours
                 int phpe[NDIM];
                 int pjpe[NDIM];
                 int hpe;
                 int jpe;
-                
+
                 int gpemin[NDIM];
                 int gpemax[NDIM];
 
                 //global value of box dimensions
 		real gxmax[NDIM];
 		real gxmin[NDIM];
-       #endif   
+       #endif
 };
 
 //it   t   dt    rho m1 m2 e bx by
@@ -247,12 +243,11 @@ typedef enum temp2vars {tmpnui,tmpnui1,tmpnui2 } TEV2; //note tmpnui1 and tmpnui
 
 
 
-typedef struct Source source;
-typedef struct Constants constants;
-typedef struct Domain domain;
-typedef struct Iome iome;
-typedef struct Meta meta;
-typedef struct Stateinfo stateinfo;
+typedef struct source Source;
+typedef struct constants Constants;
+typedef struct domain Domain;
+typedef struct meta Meta;
+typedef struct stateinfo Stateinfo;
 typedef struct params Params;
 #endif
 

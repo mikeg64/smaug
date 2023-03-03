@@ -1,6 +1,6 @@
 #include "../include/readwrite.h"
 
-unsigned long int encode3_rw(params *dp,int ix, int iy, int iz, int field) {
+unsigned long int encode3_rw(Params *dp,int ix, int iy, int iz, int field) {
 
 
   #ifdef USE_SAC_3D
@@ -10,7 +10,7 @@ unsigned long int encode3_rw(params *dp,int ix, int iy, int iz, int field) {
   #endif
 }
 
-unsigned long int fencode3_rw (struct params *dp,int *ii, int field) {
+unsigned long int fencode3_rw (Params *dp,int *ii, int field) {
 
 
 #ifdef USE_SAC_3D
@@ -25,7 +25,7 @@ unsigned long int fencode3_rw (struct params *dp,int *ii, int field) {
 
 
 void freadl(FILE *stream, char **string)
-{    
+{
     unsigned long counter = 0;
     char *line = NULL;
     int next = fgetc(stream);
@@ -65,12 +65,12 @@ int createlog(char *logfile)
 
       fdt=fopen(logfile,"a+");
       fprintf(fdt,"it   t   dt    rho m1 m2 m3 e bx by bz\n");
-      fclose(fdt);	
+      fclose(fdt);
 
 	return status;
 }
 
-int appendlog(char *logfile, params p, state s)
+int appendlog(char *logfile, Params p, State s)
 {
   int status=0;
       FILE *fdt=0;
@@ -82,7 +82,7 @@ int appendlog(char *logfile, params p, state s)
   return status;
 }
 
-int writeconfig(char *name,int n,params p, meta md, real *w)
+int writeconfig(char *name,int n,Params p, Meta md, real *w)
 {
   int status=0;
   int i1,j1;
@@ -116,8 +116,8 @@ int writeconfig(char *name,int n,params p, meta md, real *w)
 #endif
            //fprintf(fdt,"%d %f %f %f ",j1+i1*nj, u[j1+i1*nj],v[j1+i1*nj],h[j1+i1*nj]);
                // fprintf(fdt,"%f ",h[j1+i1*nj]);
-        }     
-        //printf("\n");   
+        }
+        //printf("\n");
         //fprintf(fdt,"\n");
       }
       fclose(fdt);
@@ -142,11 +142,11 @@ fprintf(fdt,"%d %d %f %f %f %f %f %f\n",i1,j1,w[(j1*ni+i1)+(ni*nj*rho)],w[(j1*ni
 #ifdef USE_SAC_3D
 fprintf(fdt,"%d %d %f %f %f %f %f %f %f %f\n",i1,j1,w[(j1*ni+i1)+(ni*nj*rho)],w[(j1*ni+i1)+(ni*nj*mom1)],w[(j1*ni+i1)+(ni*nj*mom2)],w[j1*ni+i1+(ni*nj*mom3)],w[j1*ni+i1+(ni*nj*energy)],w[j1*ni+i1+(ni*nj*b1)],w[j1*ni+i1+(ni*nj*b2)],w[j1*ni+i1+(ni*nj*b3)]);
         #endif
-		
+
            //fprintf(fdt,"%d %f %f %f ",j1+i1*nj, u[j1+i1*nj],v[j1+i1*nj],h[j1+i1*nj]);
                // fprintf(fdt,"%f ",h[j1+i1*nj]);
-        }     
-        //printf("\n");   
+        }
+        //printf("\n");
         //fprintf(fdt,"\n");
       }
       fclose(fdt);
@@ -157,15 +157,15 @@ fprintf(fdt,"%d %d %f %f %f %f %f %f %f %f\n",i1,j1,w[(j1*ni+i1)+(ni*nj*rho)],w[
 
 
 
-int writevacconfig(char *name,int n,params p, meta md, real *w, real *wd, state st)
+int writevacconfig(char *name,int n,Params p, Meta md, real *w, real *wd, State st)
 {
   int status=0;
   int i1,j1,k1,ifield;
   int ni,nj,nk;
-  
-  char tcfg[300];  
+
+  char tcfg[300];
   char configfile[300];
-  
+
   char buffer[800];
   double dbuffer[12];
   int ibuffer[5];
@@ -177,11 +177,11 @@ int writevacconfig(char *name,int n,params p, meta md, real *w, real *wd, state 
   nk=p.n[2];
     #endif
 
- 
+
    sprintf(configfile,"%s",name);
-   
+
    #ifdef USE_MPI
-   
+
    char *pch1,*pch2;
    pch1 = strtok (configfile,".");
    sprintf(tcfg,"%s",pch1);
@@ -191,35 +191,35 @@ int writevacconfig(char *name,int n,params p, meta md, real *w, real *wd, state 
    //sprintf(ext,"%s",pch2);
 
       //set the input filename corresponding to proc id
- 
+
      #ifdef USE_SAC3D
 	      if(p.ipe>99)
 		sprintf(configfile,"%s%d_np%d%d%d_%d.out",tcfg,st.it,p.pnpe[0],p.pnpe[1],p.pnpe[2],p.ipe);
 	      else if(p.ipe>9)
 		sprintf(configfile,"%s%d_np0%d0%d0%d_0%d.out",tcfg,st.it,p.pnpe[0],p.pnpe[1],p.pnpe[2],p.ipe);
 	      else
-		sprintf(configfile,"%s%d_np00%d00%d00%d_00%d.out",tcfg,p.pnpe[0],p.pnpe[1],p.pnpe[2],p.ipe);  	     
+		sprintf(configfile,"%s%d_np00%d00%d00%d_00%d.out",tcfg,p.pnpe[0],p.pnpe[1],p.pnpe[2],p.ipe);
      #else
 	      if(p.ipe>99)
 		sprintf(configfile,"%s%d_np%d%d_%d.out",tcfg,st.it,p.pnpe[0],p.pnpe[1],p.ipe);
 	      else if(p.ipe>9)
 		sprintf(configfile,"%s%d_np%d%d_%d.out",tcfg,st.it,p.pnpe[0],p.pnpe[1],p.ipe);
 	      else
-		sprintf(configfile,"%s%d_np0%d0%d_00%d.out",tcfg,st.it,p.pnpe[0],p.pnpe[1],p.ipe);  	     	     
+		sprintf(configfile,"%s%d_np0%d0%d_00%d.out",tcfg,st.it,p.pnpe[0],p.pnpe[1],p.ipe);
      #endif
 
- 
+
    #else
 
 
          //save file containing current data
       sprintf(configfile,"%s_%d.out",name,st.it);
   #endif
-   
+
 
      // sprintf(configfile,"%s",name);
       printf("write vac check dims %d %d %d %lf\n",ni,nj,st.it,st.t);
-//printf("here3 %s \n",configfile); 
+//printf("here3 %s \n",configfile);
       FILE *fdt=fopen(configfile,"w");
       //FILE *fdt=fopen("out/test.out","w");
 
@@ -299,7 +299,7 @@ int writevacconfig(char *name,int n,params p, meta md, real *w, real *wd, state 
       dbuffer[6]=0;
      fwrite(dbuffer,sizeof(double)*7,1,fdt);
     #endif
- 
+
 
       //*line5:
       //*   varnames    - names of the coordinates, variables, equation parameters
@@ -314,19 +314,19 @@ int writevacconfig(char *name,int n,params p, meta md, real *w, real *wd, state 
       fwrite(buffer,sizeof(char)*79,1,fdt);
 
     #ifdef USE_SAC_3D
-      for(ifield=0;ifield<16;ifield++)   
+      for(ifield=0;ifield<16;ifield++)
    #else
-       for(ifield=0;ifield<12;ifield++)   
-   #endif 
+       for(ifield=0;ifield<12;ifield++)
+   #endif
 
     #ifdef USE_SAC_3D
    for( k1=0;k1<nk;k1++)
     #endif
 for( j1=0;j1<nj;j1++)
-  
+
 	{
-//energyb,rhob,b1b,b2b         
-       for( i1=0;i1<ni;i1++)     
+//energyb,rhob,b1b,b2b
+       for( i1=0;i1<ni;i1++)
       {
           //if(ifield==2) printf("density %lG ",w[(j1*ni+i1)]);
                if(ifield==0)
@@ -340,21 +340,21 @@ for( j1=0;j1<nj;j1++)
                dbuffer[0]=wd[(k1*ni*nj+j1*ni+i1)+(ni*nj*nk*(pos2))];
                else if(ifield==2)
                dbuffer[0]=wd[(k1*ni*nj+j1*ni+i1)+(ni*nj*nk*(pos3))];
-               
+
     #else
-    
+
     #endif
                else
     #ifdef USE_SAC_3D
                 dbuffer[0]=w[(k1*ni*nj+j1*ni+i1)+(ni*nj*nk*(ifield-3))];
     #else
-                dbuffer[0]=w[(j1*ni+i1)+(ni*nj*(ifield-2))];              
+                dbuffer[0]=w[(j1*ni+i1)+(ni*nj*(ifield-2))];
     #endif
 
                 fwrite(dbuffer,sizeof(double),1,fdt);
-                //printf("%g ",dbuffer[0]);		
+                //printf("%g ",dbuffer[0]);
 
-        }     
+        }
       }
       //printf("density nowt \n \n ");
       buffer[0]='\n';
@@ -366,17 +366,17 @@ for( j1=0;j1<nj;j1++)
 }
 
 
-int writevacgatherconfig(char *name,int n,params p, meta md, real *w, real *wd, state st)
+int writevacgatherconfig(char *name,int n,Params p, Meta md, real *w, real *wd, State st)
 {
   int status=0;
   int i1,j1,k1,ifield;
   int ni,nj,nk;
   int istart,jstart,kstart;
   int ifin,jfin,kfin;
-  
-  char tcfg[300];  
+
+  char tcfg[300];
   char configfile[300];
-  
+
   char buffer[800];
   double dbuffer[12];
   int ibuffer[5];
@@ -402,12 +402,12 @@ int writevacgatherconfig(char *name,int n,params p, meta md, real *w, real *wd, 
 
 
 
- 
+
    sprintf(configfile,"%s",name);
       sprintf(configfile,"%s",name);
-   
+
    #ifdef USE_MPI
-   
+
    char *pch1,*pch2;
    pch1 = strtok (configfile,".");
    sprintf(tcfg,"%s",pch1);
@@ -416,17 +416,17 @@ int writevacgatherconfig(char *name,int n,params p, meta md, real *w, real *wd, 
    printf("here1 %s %d %d \n",tcfg,ni,nj);
      sprintf(configfile,"%s%d.out",tcfg,st.it);
    #else
- 
+
 
 
          //save file containing current data
       sprintf(configfile,"%s_%d.out",name,st.it);
   #endif
-   
+
 
      // sprintf(configfile,"%s",name);
       printf("write vac check dims %d %d %d %lf\n",ni,nj,st.it,st.t);
-//printf("here3 %s \n",configfile); 
+//printf("here3 %s \n",configfile);
       FILE *fdt=fopen(configfile,"w");
       //FILE *fdt=fopen("out/test.out","w");
 
@@ -506,7 +506,7 @@ int writevacgatherconfig(char *name,int n,params p, meta md, real *w, real *wd, 
       dbuffer[6]=0;
      fwrite(dbuffer,sizeof(double)*7,1,fdt);
     #endif
- 
+
 
       //*line5:
       //*   varnames    - names of the coordinates, variables, equation parameters
@@ -521,19 +521,19 @@ int writevacgatherconfig(char *name,int n,params p, meta md, real *w, real *wd, 
       fwrite(buffer,sizeof(char)*79,1,fdt);
 
     #ifdef USE_SAC_3D
-      for(ifield=0;ifield<16;ifield++)   
+      for(ifield=0;ifield<16;ifield++)
    #else
-       for(ifield=0;ifield<12;ifield++)   
-   #endif 
+       for(ifield=0;ifield<12;ifield++)
+   #endif
 
     #ifdef USE_SAC_3D
    for( k1=kstart;k1<kfin;k1++)
     #endif
 for( j1=jstart;j1<jfin;j1++)
-  
+
 	{
-//energyb,rhob,b1b,b2b         
-       for( i1=istart;i1<ifin;i1++)     
+//energyb,rhob,b1b,b2b
+       for( i1=istart;i1<ifin;i1++)
       {
           //if(ifield==2) printf("density %lG ",w[(j1*ni+i1)]);
                if(ifield==0)
@@ -547,24 +547,24 @@ for( j1=jstart;j1<jfin;j1++)
                dbuffer[0]=wd[(k1*ni*nj+j1*ni+i1)+(ni*nj*nk*(pos2))];
                else if(ifield==2)
                dbuffer[0]=wd[(k1*ni*nj+j1*ni+i1)+(ni*nj*nk*(pos3))];
-               
+
     #else
-    
+
     #endif
                else
     #ifdef USE_SAC_3D
                 dbuffer[0]=w[(k1*ni*nj+j1*ni+i1)+(ni*nj*nk*(ifield-3))];
     #else
-                dbuffer[0]=w[(j1*ni+i1)+(ni*nj*(ifield-2))];              
+                dbuffer[0]=w[(j1*ni+i1)+(ni*nj*(ifield-2))];
     #endif
 
-                fwrite(dbuffer,sizeof(double),1,fdt);		
-                //printf("%g ",w[(j1*ni+i1)+(ni*nj*(ifield-2))]);	
-        }     
+                fwrite(dbuffer,sizeof(double),1,fdt);
+                //printf("%g ",w[(j1*ni+i1)+(ni*nj*(ifield-2))]);
+        }
       }
       //printf("density nowt \n \n ");
       buffer[0]='\n';
-      //printf("\n ");	
+      //printf("\n ");
       fwrite(buffer,sizeof(char),1,fdt);
       fclose(fdt);
 
@@ -574,19 +574,19 @@ for( j1=jstart;j1<jfin;j1++)
 
 
 
-/*Big problems with reading fortran unformatted "binary files" need to include 
+/*Big problems with reading fortran unformatted "binary files" need to include
   record field*/
 
-int readbinvacconfig(char *name,params p, meta md, real *w,real *wd, state st)
+int readbinvacconfig(char *name,Params p, Meta md, real *w,real *wd, State st)
 {
 
   int status=0;
   int i1,j1,k1,ifield;
   int ni,nj,nk;
-  
-  char tcfg[300];  
+
+  char tcfg[300];
   char configfile[300];
-  
+
   char buffer[800];
   double dbuffer[12];
   int ibuffer[5];
@@ -645,7 +645,7 @@ int readbinvacconfig(char *name,params p, meta md, real *w,real *wd, state st)
       fread(ibuffer,sizeof(int)*2,1,fdt);
     #endif
     #ifdef USE_SAC_3D
-      
+
       fread(ibuffer,sizeof(int)*3,1,fdt);
       //nk=ibuffer[2];
     #endif
@@ -669,13 +669,13 @@ int readbinvacconfig(char *name,params p, meta md, real *w,real *wd, state st)
       fread(dbuffer,sizeof(double)*6,1,fdt);
       //dbuffer[4]=0;
       //dbuffer[5]=0;
-     
+
     #endif
     #ifdef USE_SAC_3D
       fread(dbuffer,sizeof(double)*7,1,fdt);
       p.g[2]=dbuffer[4];
       //dbuffer[5]=0;
-      //dbuffer[6]=0;     
+      //dbuffer[6]=0;
     #endif
 
       p.gamma=dbuffer[0];
@@ -699,21 +699,21 @@ int readbinvacconfig(char *name,params p, meta md, real *w,real *wd, state st)
 
 
     #ifdef USE_SAC_3D
-      for(ifield=0;ifield<16;ifield++)   
+      for(ifield=0;ifield<16;ifield++)
    #else
-       for(ifield=0;ifield<12;ifield++)   
-   #endif 
+       for(ifield=0;ifield<12;ifield++)
+   #endif
 
     #ifdef USE_SAC_3D
    for( k1=0;k1<nk;k1++)
     #endif
 
 
-         for( i1=0;i1<ni;i1++)   
+         for( i1=0;i1<ni;i1++)
 	{
-//energyb,rhob,b1b,b2b         
-     
-for( j1=0;j1<nj;j1++)  
+//energyb,rhob,b1b,b2b
+
+for( j1=0;j1<nj;j1++)
       {
 
 
@@ -730,37 +730,37 @@ for( j1=0;j1<nj;j1++)
                  wd[(k1*ni*nj+j1*ni+i1)+(ni*nj*nk*(pos2))]=dbuffer[0];
                else if(ifield==2)
                  wd[(k1*ni*nj+j1*ni+i1)+(ni*nj*nk*(pos3))]=dbuffer[0];
-               
+
     #else
-    
+
     #endif
                else
     #ifdef USE_SAC_3D
                 w[(k1*ni*nj+j1*ni+i1)+(ni*nj*nk*(ifield-3))]=dbuffer[0];
     #else
-                w[(j1*ni+i1)+(ni*nj*(ifield-2))]=dbuffer[0]; 
+                w[(j1*ni+i1)+(ni*nj*(ifield-2))]=dbuffer[0];
               //if(ifield==2)
-              //  printf("%g ",w[(j1*ni+i1)+(ni*nj*(ifield-2))]);             
+              //  printf("%g ",w[(j1*ni+i1)+(ni*nj*(ifield-2))]);
     #endif
 
-               
 
 
 
 
 
 
-               // fread(dbuffer,12*sizeof(double),1,fdt);		
+
+               // fread(dbuffer,12*sizeof(double),1,fdt);
                 //i1*p.dx[0]=dbuffer[0];
                 //j1*p.dx[1]=dbuffer[1];
                //if(j1==2 || j1==3)
                 //  printf("%d %d %d %d %lg\n", ni,nj,i1,j1,dbuffer[2]);
- 
 
 
-        } 
+
+        }
         // if(ifield==2)
-       // printf("\n");    
+       // printf("\n");
       }
 
       // printf("read bin vac read fields\n");
@@ -772,7 +772,7 @@ for( j1=0;j1<nj;j1++)
 }
 
 
-int writevtkconfig(char *name,int n,params p, meta md, real *w)
+int writevtkconfig(char *name,int n,Params p, Meta md, real *w)
 {
   int status=0;
   int i1,j1,k1;
@@ -941,7 +941,7 @@ nk=p.n[2];
              #endif
 		for( j1=0;j1<(nj);j1++)
 	      		for( i1=0;i1<(ni);i1++)
-   
+
             #ifdef USE_SAC_3D
                          fprintf(fdt,"%G %G %G\n",w[(k1*ni*nj)+(j1*ni+i1)+(ni*nk*nj*iv)],w[(k1*ni*nj)+(j1*ni+i1)+(ni*nk*nj*(iv+1))],w[(k1*ni*nj)+(j1*ni+i1)+(ni*nk*nj*(iv+2))]);
             #else
@@ -964,7 +964,7 @@ nk=p.n[2];
 
 
 
-int readconfig(char *cfgfile, params p, meta md, real *w)
+int readconfig(char *cfgfile, Params p, Meta md, real *w)
 {
   int status=0;
 
@@ -972,7 +972,7 @@ int readconfig(char *cfgfile, params p, meta md, real *w)
 }
 
 
-int readasciivacconfig(char *cfgfile, params p, meta md,state *st, real *w, real *wd, char **hlines, int mode)
+int readasciivacconfig(char *cfgfile, Params p, Meta md,State *st, real *w, real *wd, char **hlines, int mode)
 {
   int status=0;
   int i;
@@ -1014,10 +1014,10 @@ int readasciivacconfig(char *cfgfile, params p, meta md,state *st, real *w, real
 		if((p.pipe[2])==0) kf=nk-2;
 		if((p.pipe[2])==((p.pnpe[2])-1)) ks=2;
           #endif
-	
+
         #endif
     }
-  
+
 printf("reading %s %d %d\n",cfgfile,ni,nj);
    FILE *fdt=fopen(cfgfilename,"r+");
 //FILE *fdt=fopen("zero1_np0201_001.ini","r+");
@@ -1044,8 +1044,8 @@ for( k1=ks;k1<(kf);k1++)
 for( j1=js;j1<(jf);j1++)
 for( i1=is;i1<(iif);i1++)
 
-   
-	     
+
+
              {
 
 #ifdef USE_SAC_3D
@@ -1081,12 +1081,12 @@ for( i1=is;i1<(iif);i1++)
   return status;
 }
 
-int writeasciivacconfig(char *cfgfile, params p, meta md, real *w,real *wd, char **hlines, state st, int mode)
+int writeasciivacconfig(char *cfgfile, Params p, Meta md, real *w,real *wd, char **hlines, State st, int mode)
 {
   int status=0;
   int i;
   int i1,j1,k1;
-  int ni,nj,nk;                         
+  int ni,nj,nk;
   int shift;
   real x,y,z,val;
 
@@ -1101,12 +1101,12 @@ int writeasciivacconfig(char *cfgfile, params p, meta md, real *w,real *wd, char
 
    iif=ni;
    jf=nj;
-    
+
 	  #ifdef USE_SAC_3D
             nk=p.n[2];
             kf=nk;
 	#endif
-   
+
    //char **hlines;
    char *line;
 
@@ -1127,7 +1127,7 @@ if(mode==0)
 		if((p.pipe[2])==0) kf=nk-2;
 		if((p.pipe[2])==((p.pnpe[2])-1)) ks=2;
           #endif
-	
+
         #endif
 }
 
@@ -1141,7 +1141,7 @@ if(mode==0)
    sprintf(ext,"%s",pch2);
 
 
- 
+
 
    //printf("here1 %s \n",tcfg);
    //sprintf(ext,"%s",pch2);
@@ -1156,14 +1156,14 @@ if(mode==0)
 		      else if(p.ipe>9)
 			sprintf(configfile,"%s_np0%d0%d0%d_0%d.%s",tcfg,p.pnpe[0],p.pnpe[1],p.pnpe[2],p.ipe,ext);
 		      else
-			sprintf(configfile,"%s_np00%d00%d00%d_00%d.%s",tcfg,p.pnpe[0],p.pnpe[1],p.pnpe[2],p.ipe,ext);  	     
+			sprintf(configfile,"%s_np00%d00%d00%d_00%d.%s",tcfg,p.pnpe[0],p.pnpe[1],p.pnpe[2],p.ipe,ext);
 	     #else
 		      if(p.ipe>99)
 			sprintf(configfile,"%s_np%d%d_%d.%s",tcfg,p.pnpe[0],p.pnpe[1],p.ipe,ext);
 		      else if(p.ipe>9)
 			sprintf(configfile,"%s_np%d%d_%d.%s",tcfg,p.pnpe[0],p.pnpe[1],p.ipe,ext);
 		      else
-			sprintf(configfile,"%s_np0%d0%d_00%d.%s",tcfg,p.pnpe[0],p.pnpe[1],p.ipe,ext);  	     	     
+			sprintf(configfile,"%s_np0%d0%d_00%d.%s",tcfg,p.pnpe[0],p.pnpe[1],p.ipe,ext);
 	     #endif
 
      }
@@ -1175,14 +1175,14 @@ if(mode==0)
 		      else if(p.ipe>9)
 			sprintf(configfile,"%s%d_np0%d0%d0%d_0%d.%s",tcfg,st.it,p.pnpe[0],p.pnpe[1],p.pnpe[2],p.ipe,ext);
 		      else
-			sprintf(configfile,"%s%d_np00%d00%d00%d_00%d.%s",tcfg,p.pnpe[0],p.pnpe[1],p.pnpe[2],p.ipe,ext);  	     
+			sprintf(configfile,"%s%d_np00%d00%d00%d_00%d.%s",tcfg,p.pnpe[0],p.pnpe[1],p.pnpe[2],p.ipe,ext);
 	     #else
 		      if(p.ipe>99)
 			sprintf(configfile,"%s%d_np%d%d_%d.%s",tcfg,st.it,p.pnpe[0],p.pnpe[1],p.ipe,ext);
 		      else if(p.ipe>9)
 			sprintf(configfile,"%s%d_np%d%d_%d.%s",tcfg,st.it,p.pnpe[0],p.pnpe[1],p.ipe,ext);
 		      else
-			sprintf(configfile,"%s%d_np0%d0%d_00%d.%s",tcfg,st.it,p.pnpe[0],p.pnpe[1],p.ipe,ext);  	     	     
+			sprintf(configfile,"%s%d_np0%d0%d_00%d.%s",tcfg,st.it,p.pnpe[0],p.pnpe[1],p.ipe,ext);
 	     #endif
      }
 
@@ -1201,12 +1201,12 @@ if(mode==0)
        }
      else
      {
-	sprintf(configfile,"%s_%d.%s",tcfg,st.it,ext); 
+	sprintf(configfile,"%s_%d.%s",tcfg,st.it,ext);
 	//sprintf(configfile,"%s_%d.out",cfgfile,st.it);
        }
 
          //save file containing current data
-      
+
   #endif
 
 //printf("%s %d", configfile,p.ipe);
@@ -1243,7 +1243,7 @@ if(mode==0)
     #endif
     #ifdef USE_SAC_3D
       fprintf(fdt,"%d %d %d\n",ni,nj,nk);
-    #endif 
+    #endif
 
      //*line4:
       //*   eqpar()     - equation parameters from filenameini (neqpar reals)
@@ -1315,12 +1315,12 @@ for( k1=ks;k1<(kf);k1++)
 }
 
 
-int createconfigsegment(params p,  real *wnew,real *wdnew, real *w,real *wd)
+int createconfigsegment(Params p,  real *wnew,real *wdnew, real *w,real *wd)
 {
   int status=0;
   int i,var;
   int i1,j1,k1;
-  int ni,nj,nk;                         
+  int ni,nj,nk;
   int shift,tvar;
   real x,y,val;
 
@@ -1351,7 +1351,7 @@ int oshift;
 	     for( i1=0;i1<(ni);i1++)
              {
                 oi1=i1+(p.pipe[0]*ni);
-                oj1=j1+(p.pipe[1]*nj);  
+                oj1=j1+(p.pipe[1]*nj);
 		#ifdef USE_SAC_3D
                          shift=(k1*ni*nj+j1*ni+i1);
                          ok1=k1+(p.pipe[2]*nk);
@@ -1368,7 +1368,7 @@ int oshift;
                        /*  if(var ==2)
                             printf("%g ",w[oshift+oni*onj*var]);*/
                      }
-                 
+
 
                     for(var=pos1; var<=(pos2+(NDIM>2)); var++)
                          wdnew[shift+ni*nj*var]=wd[oshift+oni*onj*var];
@@ -1388,12 +1388,12 @@ int oshift;
 }
 
 
-int gathersegment(params p,  real *wnew,real *wdnew, real *w,real *wd)
+int gathersegment(Params p,  real *wnew,real *wdnew, real *w,real *wd)
 {
   int status=0;
   int i,var;
   int i1,j1,k1;
-  int ni,nj,nk;                         
+  int ni,nj,nk;
   int shift;
   real x,y,val;
 
@@ -1422,7 +1422,7 @@ int oshift;
 	     for( i1=0;i1<(ni);i1++)
              {
                 oi1=i1+(p.pipe[0]*ni);
-                oj1=j1+(p.pipe[1]*nj);  
+                oj1=j1+(p.pipe[1]*nj);
 		#ifdef USE_SAC_3D
                          shift=(k1*ni*nj+j1*ni+i1);
                          ok1=k1+(p.pipe[2]*nk);
@@ -1450,7 +1450,7 @@ int oshift;
 }
 
 
-void readatmos(params p,real *w)
+void readatmos(Params p,real *w)
 {
 int n=-1;
 int count;
