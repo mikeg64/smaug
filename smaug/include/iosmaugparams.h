@@ -1,6 +1,5 @@
 
 
-
 real g  = 9.81;
 real u0 = 0;
 real v0 = 0;
@@ -21,16 +20,16 @@ int ngk=2;
 
 
 //#ifdef USE_SAC
-int ni;
-ni=124; //BW tests
+int ni=252;
+//ni=124; //BW tests
 //ni=252;//2d model
-ni=ni+2*ngi;
+//ni=ni+2*ngi;
 //ni=512;
 //real xmax = 6.2831853;
 
-real xmax=1599999.941;
-real xmin=36641.221;
-real dx = (xmax-xmin)/(ni);
+real xmax=1.0;
+real xmin=0.0;
+//real dx = (xmax-xmin)/(ni);
 //#endif
 
 
@@ -39,15 +38,15 @@ real dx = (xmax-xmin)/(ni);
 
 
 
-int nj=124;  //BW test
+int nj=252;  //BW test
 //nj=252;//2d model
-nj=nj+2*ngj;
+//nj=nj+2*ngj;
 //nj=512;
 //real ymax = 6.2831853;
-real ymax=2007812.5;
-real ymin=7812.5;
+real ymax=1.0;
+real ymin=0.0;
 //real dx = xmax/(ni-4);
-real dy = (ymax-ymin)/(nj);
+//real dy = (ymax-ymin)/(nj);
 //nj=41;
 
 
@@ -57,24 +56,25 @@ real dy = (ymax-ymin)/(nj);
 
 int nk;
 nk=124;    //BW tests
-
 nk=nk+2*ngk;
 real zmax=2007812.5;
 real zmin=7812.5;
 //real dx = xmax/(ni-4);
-real dz = (zmax-zmin)/(nk);
+//real dz = (zmax-zmin)/(nk);
 #endif
 
-
+real *x, *y;
 
 //printf("dx %f %f %f\n",dx,dy,dz);
-real *x=(real *)calloc(ni,sizeof(real));
+/*
+x=(real *)calloc(ni,sizeof(real));
 for(i=0;i<ni;i++)
 		x[i]=i*dx;
 
-real *y=(real *)calloc(nj,sizeof(real));
+y=(real *)calloc(nj,sizeof(real));
 for(i=0;i<nj;i++)
 		y[i]=i*dy;
+		*/
 
 
 
@@ -86,26 +86,29 @@ int finishsteering=0;
 char configfile[300];
 //char *cfgfile="zero1.ini";
 //char *cfgfile="3D_128_128_128_asc_50.ini";
-char *cfgfile="3D_tubeact_128_128_128_asc_50.ini";
+//char cfgfile[]="3D_tubeact_128_128_128_asc_50.ini";
+char cfgfile[]="configs/zero1_ot_asc.ini";
 //char *cfgfile="zero1_BW_bin.ini";
+char cfgout[]="out/zeroOT";
 //char *cfgout="3D_tube_128_128_128";
 //char *cfgout="/fastdata/cs1mkg/sac_cuda/out_ndriver_nohyp_npgft/3D_tube_128_128_128";
-char *cfgout="/fastdata/cs1mkg/sac_cuda/out_driver_hyp_tube/3D_atubet1slow_128_128_128_final";
-Params *d_p;
-Params *p=(Params *)malloc(sizeof(Params));
+//char cfgout[]="/fastdata/cs1mkg/sac_cuda/out_driver_hyp_tube/3D_atubet1slow_128_128_128_final";
+Params *d_p, *p;
+Meta *metad;
 
-State *d_state;
-State *state=(State *)malloc(sizeof(State));
+
+State *d_state, *state;
+/*Params *p=(Params *)malloc(sizeof(Params));
+State *state=(State *)malloc(sizeof(State));*/
+
 
 #ifdef USE_SAC
-dt=2.0;  //bach test
-
+real dt=0.0002;  //OZT test
 #endif
-
 #ifdef USE_SAC_3D
 //dt=2.0;  //BACH3D
 //dt=0.13;  //BACH3D
-dt=0.07;  //BACH3D
+real dt=0.07;  //BACH3D
 #endif
 
 
@@ -115,27 +118,32 @@ dt=0.07;  //BACH3D
 //dt=0.00065;  //OZT test
 //dt=6.5/10000000.0; //BW test
 //dt=0.00000065;  //BW tests
-dt=0.000000493;  //BW tests
+//dt=0.000000493;  //BW tests
 //dt=0.005;
 //dt=0.000139;
 //dt=3.0/10000000.0; //BW test
 //#endif*/
 
 
-int nt=(int)((tmax)/dt);
+//int nt;
+//nt=(int)((tmax)/dt);
 //nt=3000;
-nt=5000;
+int nt=100;
 //nt=200000;
 //nt=40020;
 //nt=100;
-real *t=(real *)calloc(nt,sizeof(real));
-printf("runsim 1%d \n",nt);
+real *t;
+//real *t=(real *)calloc(nt,sizeof(real));
+//printf("runsim 1%d \n",nt);
 //t = [0:dt:tdomain];
-for(i=0;i<nt;i++)
-		t[i]=i*dt;
+/*for(i=0;i<nt;i++)
+		t[i]=i*dt;*/
 
 //real courant = wavespeed*dt/dx;
 
+//define the variables as defeined values set in the iosmaugparams.h
+
+/*
 p->n[0]=ni;
 p->n[1]=nj;
 p->ng[0]=ngi;
@@ -159,14 +167,14 @@ p->dx[2]=dz;
 #endif
 //p->g=g;
 
-
+*/
 
 /*constants used for adiabatic hydrodynamics*/
 /*
 p->gamma=2.0;
 p->adiab=0.5;
 */
-
+/*
 p->gamma=1.66666667;
 
 
@@ -246,26 +254,27 @@ p->chyp[mom3]=0.4;
 p->chyp[b3]=0.02;
 #endif
 
+*/
 
 
-iome elist;
-meta meta;
 
 
 //set boundary types
+/*
 for(int jj=0; jj<2; jj++)
 for(int ii=0; ii<NVAR; ii++)
 for(int idir=0; idir<NDIM; idir++)
 {
    (p->boundtype[ii][idir][jj])=5;  //period=0 mpi=1 mpiperiod=2  cont=3 contcd4=4 fixed=5 symm=6 asymm=7
 }
+*/
 
 
 
-elist.server=(char *)calloc(500,sizeof(char));
 
 
-meta.directory=(char *)calloc(500,sizeof(char));
+
+/*meta.directory=(char *)calloc(500,sizeof(char));
 meta.author=(char *)calloc(500,sizeof(char));
 meta.sdate=(char *)calloc(500,sizeof(char));
 meta.platform=(char *)calloc(500,sizeof(char));
@@ -283,7 +292,7 @@ strcpy(meta.desc,"A simple test of SAAS");
 strcpy(meta.name,"test1");
 strcpy(meta.ini_file,"test1.ini");
 strcpy(meta.log_file,"test1.log");
-strcpy(meta.out_file,"test1.out");
+strcpy(meta.out_file,"test1.out");*/
 //meta.directory="out";
 //meta.author="MikeG";
 //meta.sdate="Nov 2009";
@@ -291,8 +300,6 @@ strcpy(meta.out_file,"test1.out");
 //meta.desc="A simple test of SAAS";
 //meta.name="tsteer1";
 
-	strcpy(elist.server,"localhost1");
-	elist.port=80801;
-	elist.id=0;
+
 
 

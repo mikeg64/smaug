@@ -3,6 +3,8 @@
 #include "../include/smaugcukernels.h"
 #include "../include/iobparams.h"
 
+#include "../include/defs.h"
+#include "../include/iosmaugparams.h"
 
 int main(int argc, char* argv[])
 {
@@ -30,9 +32,10 @@ char configinfile[300];
 tcom=0.0;
 tcal=0.0;
 
-#include "../include/defs.h"
-#include "../include/iosmaugparams.h"
-
+real dx,dy;
+#ifdef USE_SAC_3D
+real dz;
+#endif
 
 struct bparams *d_bp;
 struct bparams *bp=(struct bparams *)malloc(sizeof(struct bparams));
@@ -40,6 +43,161 @@ struct bparams *bp=(struct bparams *)malloc(sizeof(struct bparams));
 
 FILE *portf;
 
+ni=ni+2*ngi;
+nj=nj+2*ngj;
+dx = (xmax-xmin)/(ni);
+dy = (ymax-ymin)/(nj);
+
+#ifdef USE_SAC_3D
+nk=nk+2*ngk;
+dz = (zmax-zmin)/(nk);
+#endif
+
+//printf("dx %f %f %f\n",dx,dy,dz);
+x=(real *)calloc(ni,sizeof(real));
+for(i=0;i<ni;i++)
+		x[i]=i*dx;
+
+y=(real *)calloc(nj,sizeof(real));
+for(i=0;i<nj;i++)
+		y[i]=i*dy;
+
+p=(Params *)malloc(sizeof(Params));
+state=(State *)malloc(sizeof(State));
+metad=(Meta *)malloc(sizeof(Meta));
+
+t=(real *)calloc(nt,sizeof(real));
+printf("runsim 1%d \n",nt);
+//t = [0:dt:tdomain];
+for(i=0;i<nt;i++)
+		t[i]=i*dt;
+
+//from smaug params
+//define the variables as defined values set in the iosmaugparams.h
+
+p->n[0]=ni;
+p->n[1]=nj;
+p->ng[0]=ngi;
+p->ng[1]=ngj;
+
+p->npgp[0]=1;
+p->npgp[1]=1;
+
+#ifdef USE_SAC_3D
+p->n[2]=nk;
+p->ng[2]=ngk;
+p->npgp[2]=1;
+#endif
+
+p->dt=dt;
+p->dx[0]=dx;
+p->dx[1]=dy;
+
+#ifdef USE_SAC_3D
+p->dx[2]=dz;
+#endif
+//p->g=g;
+
+
+
+/*constants used for adiabatic hydrodynamics*/
+/*
+p->gamma=2.0;
+p->adiab=0.5;
+*/
+
+p->gamma=1.66666667;
+
+
+
+
+
+
+p->mu=1.0;
+p->eta=0.0;
+p->g[0]=0.0;
+//p->g[0]=0.0;
+p->g[1]=0.0;
+#ifdef USE_SAC_3D
+p->g[2]=0.0;
+#endif
+//p->cmax=1.0;
+p->cmax=0.02;
+p->courant=0.2;
+p->rkon=0.0;
+p->sodifon=0.0;
+p->moddton=0.0;
+p->divbon=0.0;
+p->divbfix=0.0;
+p->hyperdifmom=1.0;
+p->readini=1.0;
+p->cfgsavefrequency=1;
+
+
+p->xmax[0]=xmax;
+p->xmax[1]=ymax;
+p->xmin[0]=xmin;
+p->xmin[1]=ymin;
+#ifdef USE_SAC_3D
+p->xmax[2]=zmax;
+p->xmin[2]=zmin;
+#endif
+
+p->nt=nt;
+p->tmax=tmax;
+
+p->steeringenabled=steeringenabled;
+p->finishsteering=finishsteering;
+
+p->maxviscoef=0;
+//p->chyp=0.0;
+//p->chyp=0.00000;
+p->chyp3=0.00000;
+
+
+for(i=0;i<NVAR;i++)
+  p->chyp[i]=0.0;
+
+p->chyp[rho]=0.02;
+p->chyp[energy]=0.02;
+p->chyp[b1]=0.02;
+p->chyp[b2]=0.02;
+p->chyp[mom1]=0.2;
+p->chyp[mom2]=0.2;
+
+p->chyp[rho]=0.02;
+p->chyp[mom1]=0.2;
+p->chyp[mom2]=0.2;
+
+
+
+
+
+p->chyp[rho]=0.02;
+p->chyp[energy]=0.02;
+p->chyp[b1]=0.02;
+p->chyp[b2]=0.02;
+p->chyp[mom1]=0.4;
+p->chyp[mom2]=0.4;
+#ifdef USE_SAC_3D
+p->chyp[mom3]=0.4;
+p->chyp[b3]=0.02;
+#endif
+
+
+
+
+
+
+//set boundary types
+for(int jj=0; jj<2; jj++)
+for(int ii=0; ii<NVAR; ii++)
+for(int idir=0; idir<NDIM; idir++)
+{
+   (p->boundtype[ii][idir][jj])=0;  //period=0 mpi=1 mpiperiod=2  cont=3 contcd4=4 fixed=5 symm=6 asymm=7
+}
+
+hlines=(char **)calloc(5, sizeof(char*));
 
 if(argc>3  && strcmp(argv[2],"gather")==0 && (atoi(argv[3])>=0) && (atoi(argv[3])<=nt))
 {
@@ -88,61 +246,11 @@ p->mode=mode;
 	sprintf(configfile,"%s",cfgout);
 
 
-	     #ifdef USE_SAC_3D
-
-		      if(p->ipe>99)
-			sprintf(configinfile,"%s_np0%d0%d0%d_%d.%s",tcfg,p->pnpe[0],p->pnpe[1],p->pnpe[2],p->ipe,ext);
-		      else if(p->ipe>9)
-			sprintf(configinfile,"%s_np0%d0%d0%d_0%d.%s",tcfg,p->pnpe[0],p->pnpe[1],p->pnpe[2],p->ipe,ext);
-		      else
-			sprintf(configinfile,"%s_np0%d0%d0%d_00%d.%s",tcfg,p->pnpe[0],p->pnpe[1],p->pnpe[2],p->ipe,ext);
-	     #else
-		      if(p->ipe>99)
-			sprintf(configinfile,"%s_np0%d0%d_%d.%s",tcfg,p->pnpe[0],p->pnpe[1],p->ipe,ext);
-		      else if(p->ipe>9)
-			sprintf(configinfile,"%s_np0%d0%d_0%d.%s",tcfg,p->pnpe[0],p->pnpe[1],p->ipe,ext);
-		      else
-			sprintf(configinfile,"%s_np0%d0%d_00%d.%s",tcfg,p->pnpe[0],p->pnpe[1],p->ipe,ext);
-	     #endif
-	#endif
-
-	//if doing a scatter or gather set the domain size correctly
-	//take a distribution and distribute domain to processors
-	if(mode==scatter )
-	{
-	  printf("Scatter %s %d %d %d\n",cfgfile,p->pnpe[0],p->pnpe[1],p->pnpe[2]);
-	  sprintf(configinfile,"%s",cfgfile);
-	  p->n[0]=ni*(p->pnpe[0]);
-	  p->n[1]=nj*(p->pnpe[1]);
-	   #ifdef USE_SAC_3D
-		    p->n[2]=nk*(p->pnpe[2]);
-	   #endif
-	}
-
-	if( mode==gather)
-	{
-	   ni=ni*(p->pnpe[0]);
-	   nj=nj*(p->pnpe[1]);
-	   #ifdef USE_SAC_3D
-		   nk=nk*(p->pnpe[2]);
-	   #endif
-	}
 
 
-	if(mode==init)
-	{
-	    p->n[0]=ni;
-	    p->n[1]=nj;
-	    #ifdef USE_SAC_3D
-	      p->n[2]=nk;
-	    #endif
-	}
-	printf("config files\n%s \n %s %d %d\n",configinfile,configfile,p->n[0],p->n[1]);
 
-
-	#else
 	     sprintf(configinfile,"%s",cfgfile);
-	#endif   //#ifdef USE_MULTIGPU
+
 
 char *method=NULL;
 
@@ -182,12 +290,12 @@ char *method=NULL;
                if((p->readini)==0)
                {
                  printf("init config\n");
-		 initconfig(p, &meta, wmod,wd);
+		         initconfig(p, metad, wmod,wd);
                 }
 		else
                 {
 	         printf("reading configuration from %s\n",configinfile);
-		 readasciivacconfig(configinfile,*p,meta, state,wmod,wd,hlines,mode);
+		 readasciivacconfig(configinfile,*p,*metad, state,wmod,wd,hlines,mode);
                 }
        }
 
@@ -203,14 +311,14 @@ char *method=NULL;
 		p->mode=mode;
 
                 printf("init_config\n");
-		initconfig(p, &meta, wmod,wd);
+		initconfig(p, metad, wmod,wd);
                 printf("user initialisation\n");
 		initialisation_user1(wmod,wd,p);
 
 		// initialisation_user2(wmod,wd,p);
 		//write the config file to ascii
                 printf("writing ini file\n");
-		writeasciivacconfig(configinfile,*p, meta , wmod,wd,hlines,*state,mode);
+		writeasciivacconfig(configinfile,*p, *metad , wmod,wd,hlines,*state,mode);
 
         }
 	/*********************************************************************************************************/
@@ -346,7 +454,7 @@ char *method=NULL;
                 //note the zeroth component of wmod written
 			// writevtkconfig(configfile,n,*p, meta , w);
                      // writevacconfig(configfile,n,*p, meta , w,wd,*state);
-                      writevacconfig(configfile,n,*p, meta , wmod,wd,*state);
+                      writevacconfig(configfile,n,*p, *metad , wmod,wd,*state);
 		//writevacconfig(configfile,n,*p, meta , wmod,wd,*state);
 
 

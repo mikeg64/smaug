@@ -242,7 +242,7 @@ typedef enum temp1vars {d1,d3 } TEV1;
 typedef enum temp2vars {tmpnui,tmpnui1,tmpnui2 } TEV2; //note tmpnui1 and tmpnui2 not used on GPU
 
 
-
+typedef struct state State;
 typedef struct source Source;
 typedef struct constants Constants;
 typedef struct domain Domain;

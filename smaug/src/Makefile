@@ -1,7 +1,7 @@
 #Makefile for StarSimulation IoSimTestSimple
 
 ##### User configurable options #####
-include make_inputs
+include make_inputs_quadm5000
 ### End User configurable options ###
 
 
@@ -148,8 +148,8 @@ allsac:$(ALLOBJS)
 #	$(NVCC) --allow-multiple-defintion -g $(LIBS)  $(incDirs) -o $(Bin)/ioshalloww $(BASICEXOBJS) $(MYLIBS)
 smaug:$(BASICEXOBJS)
 	rm iosmaug.o
-	$(CC) $(C_FLAGS) $(CCFLAGS) $(incDirs)  -o ../obj/iosmaug.o -c iosmaug.cpp
-	$(CC) $(LINKFLAGS)  $(LIBS)  $(incDirs) -o $(Bin)/smaug $(ALLOBJS) $(MYLIBS)
+	$(CC) $(C_FLAGS) $(CCFLAGS) $(incDirs)  -o ../obj/iosmaug.o -c iosmaug.c
+	$(LD) $(LINKFLAGS)  $(LIBS)  $(CUDALDFLAGS) -o $(Bin)/smaug $(ALLOBJS) $(MYLIBS)
 
 
 

@@ -1,8 +1,8 @@
 
-char **hlines; //header lines for vac config files 
-hlines=(char **)calloc(5, sizeof(char*));
+char **hlines; //header lines for vac config files
+
 // Define time-domain
-real dt;
+//real dt;
 
 
 real **d_gw, **d_gwnew;
@@ -31,7 +31,7 @@ real *d_wtemp,*d_wtemp1,*d_wtemp2;
   real *d_gmpisendbuffer;
   real *d_gmpirecvbuffer;
 
-   
+
   real *d_gmpisrcbufferl;
   real *d_gmpisrcbufferr;
   real *d_gmpitgtbufferl;
