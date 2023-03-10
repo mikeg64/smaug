@@ -87,9 +87,9 @@ char configfile[300];
 //char *cfgfile="zero1.ini";
 //char *cfgfile="3D_128_128_128_asc_50.ini";
 //char cfgfile[]="3D_tubeact_128_128_128_asc_50.ini";
-char cfgfile[]="configs/zero1_ot_asc.ini";
+char cfgfile[300]="configs/zero1_ot_asc.ini";
 //char *cfgfile="zero1_BW_bin.ini";
-char cfgout[]="out/zeroOT";
+char cfgout[300]="/nobackup/users/cs1mkg/zeroOT";
 //char *cfgout="3D_tube_128_128_128";
 //char *cfgout="/fastdata/cs1mkg/sac_cuda/out_ndriver_nohyp_npgft/3D_tube_128_128_128";
 //char cfgout[]="/fastdata/cs1mkg/sac_cuda/out_driver_hyp_tube/3D_atubet1slow_128_128_128_final";
@@ -201,7 +201,7 @@ p->divbon=0.0;
 p->divbfix=0.0;
 p->hyperdifmom=1.0;
 p->readini=1.0;
-p->cfgsavefrequency=20;
+p->cfgsavefrequency=10;
 
 
 p->xmax[0]=xmax;

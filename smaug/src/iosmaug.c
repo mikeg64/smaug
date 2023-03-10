@@ -131,7 +131,7 @@ p->divbon=0.0;
 p->divbfix=0.0;
 p->hyperdifmom=1.0;
 p->readini=1.0;
-p->cfgsavefrequency=1;
+p->cfgsavefrequency=100;
 
 
 p->xmax[0]=xmax;
@@ -217,7 +217,25 @@ if(argc>2  && strcmp(argv[2],"init")==0)
 p->mode=mode;
 
 
+metad->directory=(char *)calloc(500,sizeof(char));
+metad->author=(char *)calloc(500,sizeof(char));
+metad->sdate=(char *)calloc(500,sizeof(char));
+metad->platform=(char *)calloc(500,sizeof(char));
+metad->desc=(char *)calloc(500,sizeof(char));
+metad->name=(char *)calloc(500,sizeof(char));
+metad->ini_file=(char *)calloc(500,sizeof(char));
+metad->log_file=(char *)calloc(500,sizeof(char));
+metad->out_file=(char *)calloc(500,sizeof(char));
 
+strcpy(metad->directory,"out");
+strcpy(metad->author,"MikeG");
+strcpy(metad->sdate,"Nov 2009");
+strcpy(metad->platform,"swat");
+strcpy(metad->desc,"A simple test of SAAS");
+strcpy(metad->name,"test1");
+strcpy(metad->ini_file,"test1.ini");
+strcpy(metad->log_file,"test1.log");
+strcpy(metad->out_file,"test1.out");
 
 
        /*********************************************************************************************************/
