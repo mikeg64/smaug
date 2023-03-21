@@ -14,6 +14,7 @@ int status=1;
 int mode=run;//run a model 1=scatter 2=gather
 int it=0; //test integer to be returned
 int n;
+int ibound;
 
 
 int i1,i2,i3,j1;
@@ -194,7 +195,31 @@ for(int jj=0; jj<2; jj++)
 for(int ii=0; ii<NVAR; ii++)
 for(int idir=0; idir<NDIM; idir++)
 {
-   (p->boundtype[ii][idir][jj])=0;  //period=0 mpi=1 mpiperiod=2  cont=3 contcd4=4 fixed=5 symm=6 asymm=7
+   switch(idir)
+   {
+   case 0:
+        if(jj==0)
+            ibound=BCU0;
+        else
+            ibound=BCL0;
+    break;
+
+   case 1:
+        if(jj==0)
+            ibound=BCU1;
+        else
+            ibound=BCL1;
+    break;
+
+   case 2:
+        if(jj==0)
+            ibound=BCU2;
+        else
+            ibound=BCL2;
+    break;
+   }
+
+   (p->boundtype[ii][idir][jj])=ibound;  //period=0 mpi=1 mpiperiod=2  cont=3 contcd4=4 fixed=5 symm=6 asymm=7
 }
 
 hlines=(char **)calloc(5, sizeof(char*));
@@ -227,15 +252,18 @@ metad->ini_file=(char *)calloc(500,sizeof(char));
 metad->log_file=(char *)calloc(500,sizeof(char));
 metad->out_file=(char *)calloc(500,sizeof(char));
 
-strcpy(metad->directory,"out");
-strcpy(metad->author,"MikeG");
-strcpy(metad->sdate,"Nov 2009");
-strcpy(metad->platform,"swat");
-strcpy(metad->desc,"A simple test of SAAS");
-strcpy(metad->name,"test1");
-strcpy(metad->ini_file,"test1.ini");
-strcpy(metad->log_file,"test1.log");
-strcpy(metad->out_file,"test1.out");
+
+
+
+strcpy(metad->directory, METADDIR);
+strcpy(metad->author, METADAUTHOR);
+strcpy(metad->sdate, METADSDATE);
+strcpy(metad->platform, METADPLATFORM);
+strcpy(metad->desc, METADDESC);
+strcpy(metad->name, METADNAME);
+strcpy(metad->ini_file, METADINIFILE);
+strcpy(metad->log_file, METADLOGFILE);
+strcpy(metad->out_file, METADOUTFILE);
 
 
        /*********************************************************************************************************/
