@@ -65,8 +65,8 @@ int shift=order*NVAR*dimp;
 
 
 
-              // bc3_periodic1_b(wmod+order*NVAR*dimp,p,iia,f);  //for OZT
-
+               //bc3_periodic1_b(wmod+order*NVAR*dimp,p,iia,f);  //for OZT
+                bc3_periodic1_dir_b(wmod+order*NVAR*dimp,p,iia,f,dir);
      #ifdef USE_SAC_3D
          ;//if((f!=mom1 || f !=mom2 || f != mom3) && (p->it)>0)
       #else
@@ -77,7 +77,7 @@ int shift=order*NVAR*dimp;
 
                 //  bc3_fixed_b(wmod+order*NVAR*dimp,p,iia,f,0.0);
 
-                  bc3_fixed_dir_b(wmod+order*NVAR*dimp,p,bp,iia,f,dir);
+                //  bc3_fixed_dir_b(wmod+order*NVAR*dimp,p,bp,iia,f,dir);
 
 	}
 
@@ -241,15 +241,15 @@ if(((*p)->it)==-1)
 }
 else
 {
-    boundary_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p,*d_bp,*d_s, *d_wmod, order,0,field);
+    boundary_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p,*d_bp,*d_s, *d_wmod, order,idir,field);
 
     cudaThreadSynchronize();
-    boundary_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p,*d_bp,*d_s, *d_wmod, order,1,field);
+   /* boundary_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p,*d_bp,*d_s, *d_wmod, order,1,field);
     cudaThreadSynchronize();
 #ifdef USE_SAC_3D
     boundary_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p,*d_bp,*d_s, *d_wmod, order,2,field);
     cudaThreadSynchronize();
-#endif
+#endif  */
 }
 
 

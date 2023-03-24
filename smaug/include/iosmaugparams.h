@@ -32,6 +32,7 @@
 
 #define PMAXVISCOEF 0.0
 #define PCHYP3 0.0
+#define PCHYP 0.02
 #define PCHYPRHO 0.02
 #define PCHYPENERGY 0.02
 #define PCHYPB0 0.02

@@ -99,6 +99,18 @@ p->dx[2]=dz;
 #endif
 //p->g=g;
 
+//Define parameter block
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*constants used for adiabatic hydrodynamics*/
@@ -107,32 +119,32 @@ p->gamma=2.0;
 p->adiab=0.5;
 */
 
-p->gamma=1.66666667;
+p->gamma=PGAMMA;
 
 
 
 
 
 
-p->mu=1.0;
-p->eta=0.0;
-p->g[0]=0.0;
+p->mu=PMU;
+p->eta=PETA;
+p->g[0]=PGRAV0;
 //p->g[0]=0.0;
-p->g[1]=0.0;
+p->g[1]=PGRAV1;
 #ifdef USE_SAC_3D
-p->g[2]=0.0;
+p->g[2]=PGRAV2;
 #endif
 //p->cmax=1.0;
-p->cmax=0.02;
-p->courant=0.2;
-p->rkon=0.0;
-p->sodifon=0.0;
-p->moddton=0.0;
-p->divbon=0.0;
-p->divbfix=0.0;
-p->hyperdifmom=1.0;
-p->readini=1.0;
-p->cfgsavefrequency=100;
+p->cmax=PCMAX;
+p->courant=PCOURANT;
+p->rkon=PRKON;
+p->sodifon=PSODIFON;
+p->moddton=PMODDTON;
+p->divbon=PDIVBON;
+p->divbfix=PDIVBFIX;
+p->hyperdifmom=PHYPERDIFMOM;
+p->readini=PREADINI;
+p->cfgsavefrequency=PCFGSAVEFREQUENCY;
 
 
 p->xmax[0]=xmax;
@@ -150,39 +162,24 @@ p->tmax=tmax;
 p->steeringenabled=steeringenabled;
 p->finishsteering=finishsteering;
 
-p->maxviscoef=0;
+p->maxviscoef=PMAXVISCOEF;
 //p->chyp=0.0;
 //p->chyp=0.00000;
-p->chyp3=0.00000;
+p->chyp3=PCHYP3;
 
 
 for(i=0;i<NVAR;i++)
-  p->chyp[i]=0.0;
+  p->chyp[i]=PCHYP;
 
-p->chyp[rho]=0.02;
-p->chyp[energy]=0.02;
-p->chyp[b1]=0.02;
-p->chyp[b2]=0.02;
-p->chyp[mom1]=0.2;
-p->chyp[mom2]=0.2;
-
-p->chyp[rho]=0.02;
-p->chyp[mom1]=0.2;
-p->chyp[mom2]=0.2;
-
-
-
-
-
-p->chyp[rho]=0.02;
-p->chyp[energy]=0.02;
-p->chyp[b1]=0.02;
-p->chyp[b2]=0.02;
-p->chyp[mom1]=0.4;
-p->chyp[mom2]=0.4;
+p->chyp[rho]=PCHYPRHO;
+p->chyp[energy]=PCHYPENERGY;
+p->chyp[b1]=PCHYPB0;
+p->chyp[b2]=PCHYPB1;
+p->chyp[mom1]=PCHYPMOM0;
+p->chyp[mom2]=PCHYPMOM1;
 #ifdef USE_SAC_3D
-p->chyp[mom3]=0.4;
-p->chyp[b3]=0.02;
+p->chyp[mom3]=PCHYPMOM2;
+p->chyp[b3]=PCHYPB2;
 #endif
 
 
@@ -224,6 +221,8 @@ for(int idir=0; idir<NDIM; idir++)
 
 hlines=(char **)calloc(5, sizeof(char*));
 
+
+//TODO remove intiialisation, scatter and gather the code is the engine the solver!
 if(argc>3  && strcmp(argv[2],"gather")==0 && (atoi(argv[3])>=0) && (atoi(argv[3])<=nt))
 {
   mode=gather;
@@ -326,11 +325,13 @@ char *method=NULL;
        int its=p->it;
 
 
+        //TODO remove this initialisation section
+        //preparation and generation of configurations undertaken by other codes
+        // focus on good solutions and the solver
        /*********************************************************************************************************/
        /* Start of section initialising the configuration
           on the host and on GPU host memory*/
        /*********************************************************************************************************/
-
        if(mode !=init)
        {
                if((p->readini)==0)
@@ -338,15 +339,17 @@ char *method=NULL;
                  printf("init config\n");
 		         initconfig(p, metad, wmod,wd);
                 }
-		else
+                else
                 {
-	         printf("reading configuration from %s\n",configinfile);
-		 readasciivacconfig(configinfile,*p,*metad, state,wmod,wd,hlines,mode);
+                printf("reading configuration from %s\n",configinfile);
+                readasciivacconfig(configinfile,*p,*metad, state,wmod,wd,hlines,mode);
                 }
        }
 
 
-
+        //TODO remove this initialisation section
+        //preparation and generation of configurations undertaken by other codes
+        // focus on good solutions and the solver
 	/*********************************************************************************************************/
 	/* Start of section to run special user initialisation
 	/*********************************************************************************************************/
@@ -377,8 +380,7 @@ char *method=NULL;
 	//p->it=0;
 	int order=0;
 
-        if(mode==run)
-        {
+
         //intialise arrays on GPU
 
 	cuinit(&p,&bp,&wmod,&wnew,&wd,&state,&d_p,&d_bp,&d_wnew,&d_wmod, &d_dwn1,  &d_wd, &d_state,&d_wtemp,&d_wtemp1,&d_wtemp2);
@@ -625,8 +627,8 @@ char *method=NULL;
 	 for(int dir=0;dir<NDIM; dir++)
 	 {
 		 cucomputevels(&p,&d_p,&d_wmod, &d_wd,order,dir);
+     }
 
-         }
 	 for(int dir=0;dir<NDIM; dir++)
 	 {
 
@@ -639,7 +641,7 @@ char *method=NULL;
 		      if((f==mom1 && dir==0)  ||  (f==mom2 && dir==1)  )
                   #endif
                     {
-		       cucomputept(&p,&d_p,&d_wmod, &d_wd,order,dir);
+                       cucomputept(&p,&d_p,&d_wmod, &d_wd,order,dir);
                        cucomputepbg(&p,&d_p,&d_wmod, &d_wd,order,dir);
                      }
 		     cucentdiff1(&p,&d_p,&d_state,&d_wmod,&d_wmod, &d_dwn1, &d_wd,order,ordero,p->dt,f,dir);
@@ -857,7 +859,7 @@ tc=second();
 
 
 		   //cucomputedervfields(&p,&d_p,&d_wmod, &d_wd,order);
-                   for(int dir=0;dir<(NDIM-1); dir++)
+        for(int dir=0;dir<(NDIM-1); dir++)
 		   {
 			cucomputevels(&p,&d_p,&d_wmod, &d_wd,order,dir);
                    }
@@ -1143,18 +1145,6 @@ tc=second();
         cusync(&p);
 
 
-
-        } //mode=0 clean up routine//if(mode==run)
-
-
-
-
-
-
-
-
-
-//}//if(mode==run)
 
 cusync(&p);
 
