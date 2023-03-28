@@ -13,7 +13,7 @@
 /////////////////////////////////////
 #include "../include/gradops_b.cuh"
 
-
+extern "C"
 __global__ void boundary_parallel(struct params *p, struct bparams *bp, struct state *s,  real *wmod, int order, int dir, int field)
 {
 
@@ -24,7 +24,7 @@ __global__ void boundary_parallel(struct params *p, struct bparams *bp, struct s
 
   int ni=p->n[0];
   int nj=p->n[1];
-  
+
   int ip,jp,ipg,jpg;
   int iia[NDIM];
   int dimp=((p->n[0]))*((p->n[1]));
@@ -36,8 +36,8 @@ __global__ void boundary_parallel(struct params *p, struct bparams *bp, struct s
 #else
     jp=iindex/ni;
    ip=iindex-(jp*ni);
-#endif   
-  
+#endif
+
 
 
 int shift=order*NVAR*dimp;
@@ -49,9 +49,9 @@ int shift=order*NVAR*dimp;
      k=0;
 
       //for( f=rho; f<=b2; f++)
-      //{  
+      //{
       f=field;
-	       if(i<((p->n[0])) && j<((p->n[1]))) 
+	       if(i<((p->n[0])) && j<((p->n[1])))
 		{
 		       bc3_periodic1_dir_b(wmod+order*NVAR*dimp,p,iia,f,dir);  //for OZT
 		       //  bc3_cont_cd4_b(wmod+order*NVAR*dimp,p,iia,f);  //for BW
@@ -65,9 +65,10 @@ int shift=order*NVAR*dimp;
 
 
 
-  
+
 }
 
+extern "C"
 __global__ void boundary0_parallel(struct params *p, struct bparams *bp, struct state *s,  real *wmod, int order, int dir, int field)
 {
 
@@ -75,10 +76,10 @@ __global__ void boundary0_parallel(struct params *p, struct bparams *bp, struct 
   int i,j;
   int index,k;
   int f;
-
+  int iplowerb, ipupperb;
   int ni=p->n[0];
   int nj=p->n[1];
-  
+
   int ip,jp,ipg,jpg,kp;
   //int iia[NDIM];
   int dimp=((p->n[0]))*((p->n[1]));
@@ -90,8 +91,8 @@ __global__ void boundary0_parallel(struct params *p, struct bparams *bp, struct 
 #else
     jp=iindex/ni;
    ip=iindex-(jp*ni);
-#endif   
-  
+#endif
+
 kp=0;
 
 int shift=order*NVAR*dimp;
@@ -103,9 +104,9 @@ int shift=order*NVAR*dimp;
      k=0;
 
       //for( f=rho; f<=b2; f++)
-      //{  
+      //{
       //f=field;
-	      // if(i<((p->n[0])) && j<((p->n[1]))) 
+	      // if(i<((p->n[0])) && j<((p->n[1])))
 		//{
 		      // bc3_periodic1_dir1_b(wmod+order*NVAR*dimp,p,iia,f,dir);  //for OZT
 		       //  bc3_cont_cd4_b(wmod+order*NVAR*dimp,p,iia,f);  //for BW
@@ -120,11 +121,19 @@ int shift=order*NVAR*dimp;
 kp=0;
 f=field;
 
-                if((ip==0 || ip==1) )                
+iplowerb=(ip==0 || ip==1);
+ipupperb=((ip==((p->n[0])-1)) || (ip==((p->n[0])-2)));
+
+wmod[shift+encode3_b(p,ip,jp,kp,f)]=(iplowerb?wmod[encode3_b(p,(p->n[0])-4+ip,jp,kp,f)+shift]:wmod[shift+encode3_b(p,ip,jp,kp,f)]);
+wmod[shift+encode3_b(p,ip,jp,kp,f)]=(ipupperb?wmod[encode3_b(p,4-(p->n[0])+ip,jp,kp,f)+shift]:wmod[shift+encode3_b(p,ip,jp,kp,f)]);
+
+
+
+             /*  if((ip==0 || ip==1) )
                     wmod[encode3_b(p,ip,jp,kp,f)+shift]=wmod[encode3_b(p,(p->n[0])-4+ip,jp,kp,f)+shift];
 
-                else if(((ip==((p->n[0])-1)) || (ip==((p->n[0])-2))) )                
-                    wmod[encode3_b(p,ip,jp,kp,f)+shift]=wmod[encode3_b(p,4-(p->n[0])+ip,jp,kp,f)+shift];
+                else if(((ip==((p->n[0])-1)) || (ip==((p->n[0])-2))) )
+                    wmod[encode3_b(p,ip,jp,kp,f)+shift]=wmod[encode3_b(p,4-(p->n[0])+ip,jp,kp,f)+shift];*/
 
 
 
@@ -134,10 +143,10 @@ f=field;
 
 
 
-  
+
 }
 
-
+extern "C"
 __global__ void boundary1_parallel(struct params *p, struct bparams *bp, struct state *s,  real *wmod, int order, int dir, int field)
 {
 
@@ -148,7 +157,9 @@ __global__ void boundary1_parallel(struct params *p, struct bparams *bp, struct 
 
   int ni=p->n[0];
   int nj=p->n[1];
-  
+
+  int jplowerb, jpupperb;
+
   int ip,jp,kp,ipg,jpg;
   int iia[NDIM];
   int dimp=((p->n[0]))*((p->n[1]));
@@ -160,8 +171,8 @@ __global__ void boundary1_parallel(struct params *p, struct bparams *bp, struct 
 #else
     jp=iindex/ni;
    ip=iindex-(jp*ni);
-#endif   
-  
+#endif
+
 
 
 int shift=order*NVAR*dimp;
@@ -173,9 +184,9 @@ int shift=order*NVAR*dimp;
    //  k=0;
 
       //for( f=rho; f<=b2; f++)
-      //{  
-      
-	      // if(i<((p->n[0])) && j<((p->n[1]))) 
+      //{
+
+	      // if(i<((p->n[0])) && j<((p->n[1])))
 		//{
 		       //bc3_periodic1_dir2_b(wmod+order*NVAR*dimp,p,iia,f,dir);  //for OZT
 		       //  bc3_cont_cd4_b(wmod+order*NVAR*dimp,p,iia,f);  //for BW
@@ -188,12 +199,18 @@ int shift=order*NVAR*dimp;
 f=field;
 kp=0;
 
+jplowerb=(jp==0 || jp==1);
+jpupperb=((jp==((p->n[1])-1)) || (jp==((p->n[1])-2)));
 
-                if((jp==0 || jp==1)  )                
+wmod[shift+encode3_b(p,ip,jp,kp,f)]=(jplowerb?wmod[shift+encode3_b(p,ip,(p->n[1])-4+jp,kp,f)]:wmod[shift+encode3_b(p,ip,jp,kp,f)]);
+wmod[shift+encode3_b(p,ip,jp,kp,f)]=(jpupperb?wmod[shift+encode3_b(p,ip,4-(p->n[1])+jp,kp,f)]:wmod[shift+encode3_b(p,ip,jp,kp,f)]);
+
+
+            /*    if((jp==0 || jp==1)  )
                   wmod[shift+encode3_b(p,ip,jp,kp,f)]=wmod[shift+encode3_b(p,ip,(p->n[1])-4+jp,kp,f)];
 
-                else if(((jp==((p->n[1])-1)) || (jp==((p->n[1])-2))) )                 
-                  wmod[shift+encode3_b(p,ip,jp,kp,f)]=wmod[shift+encode3_b(p,ip,4-(p->n[1])+jp,kp,f)];
+                else if(((jp==((p->n[1])-1)) || (jp==((p->n[1])-2))) )
+                  wmod[shift+encode3_b(p,ip,jp,kp,f)]=wmod[shift+encode3_b(p,ip,4-(p->n[1])+jp,kp,f)];*/
 
 
 
@@ -204,7 +221,7 @@ kp=0;
 
 
 
-  
+
 }
 
 
@@ -218,14 +235,14 @@ int cuboundary(struct params **p, struct bparams **bp,struct params **d_p, struc
  dim3 dimBlock(dimblock, 1);
 
 int numBlocks = ((dimproduct_b(*p)+numThreadsPerBlock-1)) / numThreadsPerBlock;
-if((*p)->boundtype[field][0][0]==0)
+if(idir==0 && (*p)->boundtype[field][0][0]==0)
 {
 //printf("bound 0\n");
       // boundary_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p,*d_bp,*d_s, *d_wmod, order,0,field);
 	boundary0_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p,*d_bp,*d_s, *d_wmod, order,0,field);
 }
     cudaThreadSynchronize();
-if((*p)->boundtype[field][1][0]==0)
+if(idir==1 && (*p)->boundtype[field][1][0]==0)
 {
 //printf("bound 1\n");
     //boundary_parallel<<<numBlocks, numThreadsPerBlock>>>(*d_p,*d_bp,*d_s, *d_wmod, order,1,field);
