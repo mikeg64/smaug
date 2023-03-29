@@ -1112,7 +1112,7 @@ tc=second();
 
 	   t2=second()-t1;
 	   ttot+=t2;
-	   printf("step %d time total=%f com=%f cal=%f\n",n,ttot,tcom,tcal);
+	   printf("step %d simtime %f simtimestep %f time total=%f cal=%f\n",n,p->qt,p->dt,ttot,tcal);
 
 	   state->it=n;
 	   state->t=time+(p->dt);

@@ -87,71 +87,30 @@ im2 = plt.imshow(dens, cmap=plt.cm.viridis, alpha=.9, interpolation='bilinear',v
 plt.show()
 
 
-# In[29]:
 
 
-fig = plt.figure()
-ax = fig.gca(projection='3d')
+
+
+
+fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
 X = alldat[0,:,:]
 Y = alldat[1,:,:]
-
-
 dens = alldat[2,:,:]
+
+
 #bsq=alldat[6,:,:]*alldat[6,:,:]+alldat[7,:,:]*alldat[7,:,:]
 #bmag=sqrt(bsq)
 
-surf = ax.plot_surface(X, Y, dens, rstride=1, cstride=1, cmap=cm.coolwarm,
+surf = ax.plot_surface(X, Y, dens, cmap=cm.coolwarm,
                        linewidth=0, antialiased=False)
-#ax.set_zlim(-1.01, 1.01)
-
-#ax.zaxis.set_major_locator(LinearLocator(10))
-#ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
 ax.view_init(elev=90,azim=0) 
-fig.colorbar(surf, shrink=0.5, aspect=5)
 
+
+# In[166]:
+
+
+fig, ax = plt.subplots()
+ax.imshow(dens)
 plt.show()
-
-
-# In[12]:
-
-
-fig = plt.figure(figsize=plt.figaspect(1.))
-ax = fig.add_subplot(2, 1, 1,projection='3d')
-
-#X = alldat[0,:,:]
-#Y = alldat[1,:,:]
-
-
-energy = alldat[5,:,:]
-bsq=alldat[6,:,:]*alldat[6,:,:]+alldat[7,:,:]*alldat[7,:,:]
-bmag=sqrt(bsq)
-
-surf = ax.plot_surface(X, Y, energy, rstride=1, cstride=1, cmap=cm.coolwarm,
-                       linewidth=0, antialiased=False)
-#ax.set_zlim(-1.01, 1.01)
-
-#ax.zaxis.set_major_locator(LinearLocator(10))
-#ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
-ax.view_init(elev=90,azim=0) 
-fig.colorbar(surf, shrink=0.5, aspect=5)
-
-
-
-ax = fig.add_subplot(2, 1, 2,projection='3d')
-surf = ax.plot_surface(X, Y, bmag, rstride=1, cstride=1, cmap=cm.coolwarm,
-                       linewidth=0, antialiased=False)
-#ax.set_zlim(-1.01, 1.01)
-
-#ax.zaxis.set_major_locator(LinearLocator(10))
-#ax.zaxis.set_major_formatter(FormatStrFormatter('%.02f'))
-ax.view_init(elev=90,azim=0) 
-fig.colorbar(surf, shrink=0.5, aspect=5)
-
-plt.show()
-
-
-# In[ ]:
-
-
 
 

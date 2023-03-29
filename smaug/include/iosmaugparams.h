@@ -20,7 +20,7 @@
 
 
 #define PCMAX 0.02
-#define PCOURANT 0.2
+#define PCOURANT 0.15
 #define PRKON 0.0
 #define PSODIFON 0.0
 #define PMODDTON 0.0
