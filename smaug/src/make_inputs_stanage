@@ -17,8 +17,9 @@ MYLIBS  =
 #CUDA = /usr/local/lib/nvidia-cuda/toolkit/4.0.17
 #CUDA = /usr/local/lib/nvidia-cuda/toolkit/6.5.14
 #CUDA = /usr/local/packages/libs/CUDA/8.0.44/binary/cuda
-CUDA = /opt/software/builder/developers/compilers/cuda/10.1.243/1/default
-#CUDA = /opt/software/builder/developers/compilers/cuda/10.2.89/1/default
+#CUDA = /opt/software/apps/libs/CUDA/10.1.243
+CUDA = /opt/apps/testapps/el7/software/staging/CUDA/10.1.243
+
 
 
 
@@ -43,7 +44,7 @@ LD_FLAGS =	-g
 #folowing used with kepler gpu and cuda-5.0
 #CUDACCFLAGS = --ptxas-options=-v -arch sm_35  -maxrregcount=32 -DUSE_SAC 
 
-CUDACCFLAGS = --ptxas-options=-v -gencode=arch=compute_70,code=sm_70 -gencode=arch=compute_70,code=compute_70  -maxrregcount=32 -DUSE_SAC -DUSE_USERSOURCE
+CUDACCFLAGS = --ptxas-options=-v -gencode=arch=compute_70,code=sm_70 -gencode=arch=compute_70,code=compute_70  -maxrregcount=32 -DUSE_SAC
 
 CCFLAGS = -DUSE_SAC -DD1D -DUSE_USERSOURCE
 #CCFLAGS = -DUSE_SAC_3D -DD1D -DUSE_USERSOURCE
@@ -63,8 +64,8 @@ NVC_FLAGS	= -O4 -Dlinux -DBASE=\"$(BASE)\"
 C_FLAGS	= -O4 -Dlinux -DBASE=\"$(BASE)\"  -DIO_FORTRAN $(incDirs)
 
 
-#SRCS	=\
-#	IoSimTestSimple.cpp
+SRCS	=\
+	IoSimTestSimple.cpp
 
 #INCLUDES = ../IoUtils/vec.h ../IoUtils/IoPropertyManager.h
 
