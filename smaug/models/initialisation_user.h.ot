@@ -3,7 +3,7 @@
 #include <string.h>
 #include <math.h>
 
-int encode3_uin(params *dp,int ix, int iy, int iz, int field) {
+int encode3_uin(Params *dp,int ix, int iy, int iz, int field) {
 
 
   #ifdef USE_SAC_3D
@@ -13,7 +13,7 @@ int encode3_uin(params *dp,int ix, int iy, int iz, int field) {
   #endif
 }
 
-int fencode3_uin (struct params *dp,int *ii, int field) {
+int fencode3_uin (Params *dp,int *ii, int field) {
 
 
 #ifdef USE_SAC_3D
@@ -28,14 +28,14 @@ int fencode3_uin (struct params *dp,int *ii, int field) {
 #ifdef USE_SAC_3D
 real grad3dngen_uin(real ***wmod, real *wd,struct params *p,int *ii,int dir)
 #else
-real grad3dngen_uin(real **wmod, real *wd,struct params *p,int *ii,int dir)
+real grad3dngen_uin(real **wmod, real *wd,Params *p,int *ii,int dir)
 #endif
 {
 
 
  real grad=0;
 
- 
+
 
  switch(dir)
  {
@@ -56,7 +56,7 @@ if(ii[0]>1 && ii[0]<((p->n[0])-2) )
        grad=0;
   #endif
 
-#else  
+#else
 
 
 if(ii[0]>1 && ii[0]<((p->n[0])-2) )
@@ -95,7 +95,7 @@ if( ii[1] >1 &&  ii[1]<((p->n[1])-2))
   #endif
 #else
 
- 
+
 if( ii[1] >1 &&  ii[1]<((p->n[1])-2))
 	grad=(  ( ((8*wmod[ii[0]][ii[1]+1]-8*wmod[ii[0]][ii[1]-1]+wmod[ii[0]][ii[1]-2]-wmod[ii[0]][ii[1]+2])/6.0))/(2.0*(wd[fencode3_uin(p,ii,delx2)]))    );
 
@@ -116,7 +116,7 @@ if( ii[1] >1 &&  ii[1]<((p->n[1])-2))
 
    case 2:
 #ifdef USE_SAC_3D
- 
+
 if( ii[2] >1 &&  ii[2]<((p->n[2])-2))
 	grad=(  ( ((8*wmod[ii[0]][ii[1]][ii[2]+1]-8*wmod[ii[0]][ii[1]][ii[2]-1]+wmod[ii[0]][ii[1]][ii[2]-2]-wmod[ii[0]][ii[1]][ii[2]+2])/6.0))/(2.0*(wd[fencode3_uin(p,ii,delx3)]))    );
 
@@ -152,12 +152,12 @@ real grad3dn_uin(real *wmod, real *wd,struct params *p,int *ii,int field,int dir
 
  real grad=0;
 
- 
+
 
  switch(dir)
  {
    case 0:
- 
+
 #ifdef USE_SAC_3D
   #ifdef USE_DORDER3
  if(ii[0]>2 && ii[0]<((p->n[0])-3) )
@@ -184,7 +184,7 @@ if(p->boundtype[field][dir][0] !=0  )
        grad=0;
   #endif
 }
-#else  
+#else
 
   #ifdef USE_DORDER3
 if(ii[0]>2 && ii[0]<((p->n[0])-3) )
@@ -328,9 +328,9 @@ real inte(real **w,int n, int i, int j, real dx)
 
 	real res=0.0;
 
-	if (n == 2) 
+	if (n == 2)
 	  res=dx*0.5*(w[0][j]+w[1][j]);
-	else if (n>2) 
+	else if (n>2)
 	{
 	  if(i==0) i++;
 	  for( int ii=i;ii<n; ii++)
@@ -346,14 +346,14 @@ real inte(real **w,int n, int i, int j, real dx)
 //bach3d
 
 void initialisation_user1(real *w, real *wd, struct params *p) {
-                    
-	
+
+
 
 
 }
 
 void initialisation_user2(real *w, real *wd, struct params *p) {
-                    
+
 
 
 

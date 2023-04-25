@@ -121,19 +121,19 @@ int shift=order*NVAR*dimp;
 kp=0;
 f=field;
 
-iplowerb=(ip==0 || ip==1);
+/*iplowerb=(ip==0 || ip==1);
 ipupperb=((ip==((p->n[0])-1)) || (ip==((p->n[0])-2)));
 
 wmod[shift+encode3_b(p,ip,jp,kp,f)]=(iplowerb?wmod[encode3_b(p,(p->n[0])-4+ip,jp,kp,f)+shift]:wmod[shift+encode3_b(p,ip,jp,kp,f)]);
-wmod[shift+encode3_b(p,ip,jp,kp,f)]=(ipupperb?wmod[encode3_b(p,4-(p->n[0])+ip,jp,kp,f)+shift]:wmod[shift+encode3_b(p,ip,jp,kp,f)]);
+wmod[shift+encode3_b(p,ip,jp,kp,f)]=(ipupperb?wmod[encode3_b(p,4-(p->n[0])+ip,jp,kp,f)+shift]:wmod[shift+encode3_b(p,ip,jp,kp,f)]);*/
 
 
 
-             /*  if((ip==0 || ip==1) )
+               if((ip==0 || ip==1) )
                     wmod[encode3_b(p,ip,jp,kp,f)+shift]=wmod[encode3_b(p,(p->n[0])-4+ip,jp,kp,f)+shift];
 
                 else if(((ip==((p->n[0])-1)) || (ip==((p->n[0])-2))) )
-                    wmod[encode3_b(p,ip,jp,kp,f)+shift]=wmod[encode3_b(p,4-(p->n[0])+ip,jp,kp,f)+shift];*/
+                    wmod[encode3_b(p,ip,jp,kp,f)+shift]=wmod[encode3_b(p,4-(p->n[0])+ip,jp,kp,f)+shift];
 
 
 
@@ -157,7 +157,7 @@ __global__ void boundary1_parallel(struct params *p, struct bparams *bp, struct 
 
   int ni=p->n[0];
   int nj=p->n[1];
-
+  
   int jplowerb, jpupperb;
 
   int ip,jp,kp,ipg,jpg;
@@ -199,18 +199,18 @@ int shift=order*NVAR*dimp;
 f=field;
 kp=0;
 
-jplowerb=(jp==0 || jp==1);
+/*jplowerb=(jp==0 || jp==1);
 jpupperb=((jp==((p->n[1])-1)) || (jp==((p->n[1])-2)));
 
 wmod[shift+encode3_b(p,ip,jp,kp,f)]=(jplowerb?wmod[shift+encode3_b(p,ip,(p->n[1])-4+jp,kp,f)]:wmod[shift+encode3_b(p,ip,jp,kp,f)]);
-wmod[shift+encode3_b(p,ip,jp,kp,f)]=(jpupperb?wmod[shift+encode3_b(p,ip,4-(p->n[1])+jp,kp,f)]:wmod[shift+encode3_b(p,ip,jp,kp,f)]);
+wmod[shift+encode3_b(p,ip,jp,kp,f)]=(jpupperb?wmod[shift+encode3_b(p,ip,4-(p->n[1])+jp,kp,f)]:wmod[shift+encode3_b(p,ip,jp,kp,f)]);*/
 
 
-            /*    if((jp==0 || jp==1)  )
+                if((jp==0 || jp==1)  )
                   wmod[shift+encode3_b(p,ip,jp,kp,f)]=wmod[shift+encode3_b(p,ip,(p->n[1])-4+jp,kp,f)];
 
                 else if(((jp==((p->n[1])-1)) || (jp==((p->n[1])-2))) )
-                  wmod[shift+encode3_b(p,ip,jp,kp,f)]=wmod[shift+encode3_b(p,ip,4-(p->n[1])+jp,kp,f)];*/
+                  wmod[shift+encode3_b(p,ip,jp,kp,f)]=wmod[shift+encode3_b(p,ip,4-(p->n[1])+jp,kp,f)];
 
 
 
