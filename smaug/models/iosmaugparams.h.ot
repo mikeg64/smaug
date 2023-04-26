@@ -69,7 +69,7 @@
 #define ZMIN 0.0
 
 //#define CFGFILE "configs/zero1_ot_asc_4092.ini"
-#define CFGFILE "configs/zero1_ot_asc_252.ini"
+#define CFGFILE "configs/zero1_ot_asc.ini"
 #define CFGOUT "/nobackup/users/cs1mkg/oz256/zeroOT"
 
 real g  = 9.81;
