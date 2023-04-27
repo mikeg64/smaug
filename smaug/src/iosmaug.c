@@ -46,22 +46,34 @@ FILE *portf;
 
 ni=ni+2*ngi;
 nj=nj+2*ngj;
-dx = (xmax-xmin)/(ni);
-dy = (ymax-ymin)/(nj);
+dx = (xmax-xmin)/(ni-2*ngi);
+dy = (ymax-ymin)/(nj-2*ngj);
+
+
 
 #ifdef USE_SAC_3D
 nk=nk+2*ngk;
-dz = (zmax-zmin)/(nk);
+dz = (zmax-zmin)/(nk-2*ngk);
 #endif
 
 //printf("dx %f %f %f\n",dx,dy,dz);
 x=(real *)calloc(ni,sizeof(real));
 for(i=0;i<ni;i++)
-		x[i]=i*dx;
+        x[i]=(xmin-ngi*dx)+i*dx;
+		//x[i]=i*dx;
 
 y=(real *)calloc(nj,sizeof(real));
 for(i=0;i<nj;i++)
-		y[i]=i*dy;
+        y[i]=(ymin-ngj*dy)+i*dy;
+		//y[i]=i*dy;
+
+#ifdef USE_SAC_3D
+z=(real *)calloc(nj,sizeof(real));
+for(k=0;k<nk;k++)
+        z[k]=(zmin-ngk*dz)+k*dz;
+		//y[i]=i*dy;
+#endif
+
 
 p=(Params *)malloc(sizeof(Params));
 state=(State *)malloc(sizeof(State));

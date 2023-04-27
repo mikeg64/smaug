@@ -16,8 +16,8 @@ MYLIBS  =
 #CUDA = /usr/local/cuda-5.0
 #CUDA = /usr/local/lib/nvidia-cuda/toolkit/4.0.17
 #CUDA = /usr/local/lib/nvidia-cuda/toolkit/6.5.14
-CUDA = /usr/local/packages/libs/CUDA/8.0.44/binary/cuda
-
+#CUDA = /usr/local/packages/libs/CUDA/8.0.44/binary/cuda
+CUDA = /opt/software/builder/developers/compilers/cuda/10.1.243/1/default
 
 BASE = /usr/local/dx
 incDirs = -I$(BASE)/include  -I$(IOME_HOME)/include  -I/usr/local/include -I$(CUDA)/include -I$../include
@@ -26,12 +26,7 @@ incDirs = -I$(BASE)/include  -I$(IOME_HOME)/include  -I/usr/local/include -I$(CU
 LD_FLAGS =	-g
 
 
-#remove comments from following lines to include/link IOME
-#IOMELIBS	=	-L$(IOME_HOME)/lib -L$(XERCESCROOT)/lib -L$(XALANCROOT)/lib -lxerces-c -lxalan-c -lxalanMsg  -lm -liogenericsimulation
-#MYLIBS = $(IOME_HOME)/lib/libiogenericsimulation.a 
-#IOME_INCLUDES = -I$(XERCESCROOT)/include -I$(XALANCROOT)/include
-#IOME_C_FLAGS	= -g -Dlinux -DBASE=\"$(BASE)\" -DIO_XERCESCVERSION=xercesc_2_8 -DIO_FORTRAN
-#remove comments from  lines above to include/link IOME
+
 
 
 #use -DUSE_IOME to enable IOME
@@ -39,10 +34,13 @@ LD_FLAGS =	-g
 #compiling with  -arch sm_13 enables double precision to be used
 #following used with fermi gpu
 #CUDACCFLAGS = --ptxas-options=-v -arch sm_20  -maxrregcount=32 -DUSE_SAC_3D -DUSE_USERSOURCE
-#CUDACCFLAGS = --ptxas-options=-v -arch sm_20  -maxrregcount=32 -DUSE_SAC 
+
 
 #folowing used with kepler gpu and cuda-5.0
-CUDACCFLAGS = --ptxas-options=-v -arch sm_35  -maxrregcount=32 -DUSE_SAC_3D -DUSE_USERSOURCE
+#CUDACCFLAGS = --ptxas-options=-v -arch sm_35  -maxrregcount=32 -DUSE_SAC_3D -DUSE_USERSOURCE
+
+CUDACCFLAGS = --ptxas-options=-v -gencode=arch=compute_70,code=sm_70 -gencode=arch=compute_70,code=compute_70  -maxrregcount=32 -DUSE_SAC_3D -DUSE_USERSOURCE
+
 #CCFLAGS = -DUSE_SAC -DD1D -DUSE_USERSOURCE
 CCFLAGS = -DUSE_SAC_3D -DD1D -DUSE_USERSOURCE
 
@@ -50,8 +48,8 @@ CCFLAGS = -DUSE_SAC_3D -DD1D -DUSE_USERSOURCE
 
 
 
-LIBS	=	-L$(CUDA)/lib -L$(CUDA)/lib64   -L../lib -L/usr/local/lib -lm $(IOMELIBS) -lcudart
 
+LIBS	=	-L$(CUDA)/lib -L$(CUDA)/lib64   -L../lib -L/usr/local/lib -lm -lcudart
 
 #C_FLAGS
 #NVC_FLAGS	= -g -Dlinux -DBASE=\"$(BASE)\" -DIO_XERCESCVERSION=xercesc_2_8 -DIO_FORTRAN
