@@ -112,14 +112,14 @@ real ymin= YMIN;
 
 #ifdef USE_SAC_3D
 
-int nk;
-nk= NK;
+
+int nk = NK;
 real zmax= ZMAX;
 real zmin= ZMIN;
 
 #endif
 
-real *x, *y, z*;
+real *x, *y, *z;
 
 
 
