@@ -43,11 +43,11 @@ varnames = file.read(79)
 #typedef enum vars {rho, mom1, mom2, energy, b1, b2,energyb,rhob,b1b,b2b} CEV;
 datcount=(nw+ndim)*ndata[0]*ndata[1]
 #alldat=fromfile(file,dtype=float,count=datcount)[:(nw+ndim)*ndata[0]*ndata[1]]
-alldat=fromfile(file,dtype=float,count=786432)
+alldat=fromfile(file,dtype=float,count=datcount[0])
 if size(alldat)<(nw+ndim)*ndata[0]*ndata[1]:
-    alldat=resize(alldat,(nw+ndim)*ndata[0]*ndata[1])
+    alldat=resize(alldat,(nw[0]+ndim[0])*ndata[0]*ndata[1])
 #alldat=np.reshape(alldat,(nw+ndim,ndata[0],ndata[1],),'C')
-alldat=np.reshape(alldat,(12,256,256),'C')
+#alldat=np.reshape(alldat,(12,256,256),'C')
 
 file.close()
 
