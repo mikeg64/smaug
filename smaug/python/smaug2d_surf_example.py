@@ -46,7 +46,7 @@ datcount=(nw+ndim)*ndata[0]*ndata[1]
 alldat=fromfile(file,dtype=float,count=datcount[0])
 if size(alldat)<(nw+ndim)*ndata[0]*ndata[1]:
     alldat=resize(alldat,(nw[0]+ndim[0])*ndata[0]*ndata[1])
-#alldat=np.reshape(alldat,(nw+ndim,ndata[0],ndata[1],),'C')
+alldat=np.reshape(alldat,(nw+ndim,ndata[1],ndata[0],),'C') #opposite to way we think!
 #alldat=np.reshape(alldat,(12,256,256),'C')
 
 file.close()

@@ -26,10 +26,12 @@
 #define PCOURANT 0.15
 #define PRKON 0.0
 #define PSODIFON 0.0
-#define PMODDTON 1.0
+#define PMODDTON 0.0
 #define PDIVBON 0.0
 #define PDIVBFIX 0.0
 #define PHYPERDIFMOM 1.0
+
+#can set PREADINI to zero to check user initial config creation routine 
 #define PREADINI 1.0
 #define PCFGSAVEFREQUENCY 100
 

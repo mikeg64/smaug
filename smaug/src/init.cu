@@ -166,7 +166,7 @@ int ni=p->n[0];
                    wd[fencode3_i(p,ii,delx3)]=(p->dx[2]);
                  #endif
 
-                   //init_user_i(w,p,ii);  //initilise using w field
+                   init_user_i(w,p,ii);  //initilise using w field
 
                    //commented out because spicule problem
                    //constructed on host

@@ -57,7 +57,7 @@ if ndim==3:
     alldat=fromfile(file,dtype=float,count=(nw+ndim)*ndata[0]*ndata[1]*ndata[2])[:(nw+ndim)*ndata[0]*ndata[1]*ndata[2]]
     #if size(alldat)<(nw+ndim)*ndata[0]*ndata[1]*ndata[2]:
     #    alldat=resize(alldat,(nw+ndim)*ndata[0]*ndata[1]*ndata[2])
-    alldat=np.reshape(alldat,(nw+ndim,ndata[0],ndata[1],ndata[2],),'C')
+    alldat=np.reshape(alldat,(nw+ndim,ndata[2],ndata[1],ndata[0],),'C')
 
 file.close()
 

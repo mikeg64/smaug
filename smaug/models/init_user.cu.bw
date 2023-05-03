@@ -42,8 +42,8 @@ __device__ __host__ void init_user_MODID (real *w, struct params *p,int *ii) {
 			    w[fencode3_i(p,ii,b2)]=-1.0;
 			    w[fencode3_i(p,ii,mom2)]=0.0;
 		            w[fencode3_i(p,ii,mom1)]=0.0;
-		            e1=(p2)*rgamm1+(0.5*(w[fencode3_i(p,ii,b1)]*w[fencode3_i(p,ii,b1)]+w[fencode3_i(p,ii,b2)]*w[fencode3_i(p,ii,b2)]));
-		            w[fencode3_i(p,ii,energyb)]=(e1+e2);
+		            e2=(p2)*rgamm1+(0.5*(w[fencode3_i(p,ii,b1)]*w[fencode3_i(p,ii,b1)]+w[fencode3_i(p,ii,b2)]*w[fencode3_i(p,ii,b2)]));
+		            w[fencode3_i(p,ii,energyb)]=(e2);
 		            w[fencode3_i(p,ii,energy)]=w[fencode3_i(p,ii,energyb)];
 		            w[fencode3_i(p,ii,energyb)]=0.0;
                     }
