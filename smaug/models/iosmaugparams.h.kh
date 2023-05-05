@@ -27,12 +27,12 @@
 #define PCOURANT 0.15
 #define PRKON 0.0
 #define PSODIFON 0.0
-#define PMODDTON 1.0
+#define PMODDTON 0.0
 #define PDIVBON 0.0
 #define PDIVBFIX 0.0
 #define PHYPERDIFMOM 1.0
-#define PREADINI 1.0
-#define PCFGSAVEFREQUENCY 1
+#define PREADINI 0.0
+#define PCFGSAVEFREQUENCY 1000
 
 #define PMAXVISCOEF 0.0
 #define PCHYP3 0.0
@@ -62,7 +62,7 @@
 #define NK 1
 
 #define DT 0.00017
-#define NT 101
+#define NT 100001
 
 #define XMAX 0.5
 #define YMAX 0.5

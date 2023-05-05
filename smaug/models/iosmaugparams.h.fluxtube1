@@ -24,12 +24,12 @@
 #define PCOURANT 0.15
 #define PRKON 0.0
 #define PSODIFON 0.0
-#define PMODDTON 1.0
+#define PMODDTON 0.0
 #define PDIVBON 0.0
 #define PDIVBFIX 0.0
 #define PHYPERDIFMOM 1.0
 #define PREADINI 1.0
-#define PCFGSAVEFREQUENCY 1
+#define PCFGSAVEFREQUENCY 500
 
 #define PMAXVISCOEF 0.0
 #define PCHYP3 0.0
@@ -58,8 +58,8 @@
 #define NJ 124
 #define NK 124
 
-#define DT 0.000017
-#define NT 101
+#define DT 0.001
+#define NT 100001
 
 #define XMAX 1587786.30
 #define YMAX 1992187.5
@@ -73,7 +73,7 @@
 
 
 #define CFGFILE "configs/3D_tubeact_128_128_128_asc_50.ini"
-#define CFGOUT "/nobackup/users/cs1mkg/tube/tube2"
+#define CFGOUT "out/tube2"
 
 real cmax[NDIM];
 real courantmax;
