@@ -68,7 +68,7 @@
 #define NJ 508
 #define NK 1
 
-#define DT 0.000017
+#define DT 0.000025
 #define NT 200001
 
 #define XMAX 0.5

@@ -1,11 +1,18 @@
 
+//Taylor-sedov blastwave problem
 
+//See https://www.astro.princeton.edu/~jstone/Athena/tests/blast/blast.html
+//see Taylor, G. 1950, Proceedings of the Royal Society of London Series A, 201, 159, doi: 10.1098/rspa.1950.0049
+//  Sedov, L. I. 1959, Similarity and Dimensional Methods in Mechanics
 
-//bach3d
+//sedov-taylor
+
+//note the background density and energy were set to zero
+//putting these quantities in the background lead to a negative density (in perturbed solution)
 __device__ __host__
 void init_user_MODID (real *w, struct params *p,int *ii) {
                     
-	real p0, p1,p2,rho0,rho2,rho0g,v1,v2,v3,T1,T2, xc,yc,zc,r0;
+	real p0, p1,p2,rho0,rho1,rho2,rho0g,v1,v2,v3,T1,T2, xc,yc,zc,r0;
 	real Ly, e0,c0,b0;
         real x,y,z,r;
         real rgamm, rgamm1, e1;
@@ -15,7 +22,7 @@ void init_user_MODID (real *w, struct params *p,int *ii) {
 
 
 
-	r0=0.1
+	r0=0.1;
 	p0=0.1;
 	rho0=1.0; 
 
@@ -25,7 +32,9 @@ void init_user_MODID (real *w, struct params *p,int *ii) {
         mion=1.67e-27;
 
 	b0=0;
-	b0=1.0/sqrt(2.0);
+
+	//remove comment belwo to set 2D MHD blast problem (rotor)
+	//b0=1.0/sqrt(2.0);
 	v1=0.e0;
 	v2=0.e0;
 
@@ -62,7 +71,7 @@ void init_user_MODID (real *w, struct params *p,int *ii) {
 
           x=i*(p->dx[0])+(p->xmin[0]);
           y=j*(p->dx[1])+(p->xmin[1]);
-
+	  r=sqrt(x*x+y*y);
 	//exp_x=exp(-(x*x)/(delta_x*delta_x));
 	//exp_y=exp(-(y*y)/(delta_y*delta_y));
 	
@@ -74,22 +83,22 @@ void init_user_MODID (real *w, struct params *p,int *ii) {
 
           z=k*(p->dx[2])+(p->xmin[2]);
 
-                    w[fencode3_i(p,ii,rho)]=0.0;
-                    w[fencode3_i(p,ii,energy)]=0.0;
+                    w[fencode3_i(p,ii,rhob)]=0.0;
+                    w[fencode3_i(p,ii,energyb)]=0.0;
 
 
 		    //w[fencode3_i(p,ii,rhob)]=rho0;//+c0/((x-xc)*(x-xc)+(y-yc)*(y-yc)+(z-zc)*(z-zc));
 
                 if(r<0.1)
 		{
-		    w[fencode3_i(p,ii,rhob)]=rho1;
-                    w[fencode3_i(p,ii,energyb)]=rgamm1*pow(rho1,(p->gamma));
+		    w[fencode3_i(p,ii,rho)]=rho1;
+                    w[fencode3_i(p,ii,energy)]=rgamm1*pow(rho1,(p->gamma));
 		    //w[fencode3_i(p,ii,energyb)]=2.0*rgamm1*temp*boltz/mion;
 		}
 		else
 		{
-		    w[fencode3_i(p,ii,rhob)]=rho0;
-                    w[fencode3_i(p,ii,energyb)]=rgamm1*pow(rho0,(p->gamma));
+		    w[fencode3_i(p,ii,rho)]=rho0;
+                    w[fencode3_i(p,ii,energy)]=rgamm1*pow(rho0,(p->gamma));
 		}
 		    
 		    w[fencode3_i(p,ii,b1)]=b0;
@@ -102,7 +111,7 @@ void init_user_MODID (real *w, struct params *p,int *ii) {
 		    w[fencode3_i(p,ii,mom1)]=v1;
 
                    e1=(0.5*rgamm1*(1-((p->gamma)-1))*(w[fencode3_i(p,ii,b1)]*w[fencode3_i(p,ii,b1)]+w[fencode3_i(p,ii,b2)]*w[fencode3_i(p,ii,b2)]+w[fencode3_i(p,ii,b3)]*w[fencode3_i(p,ii,b3)]));
-                    w[fencode3_i(p,ii,energyb)]=w[fencode3_i(p,ii,energyb)]-e1;
+                    w[fencode3_i(p,ii,energy)]=w[fencode3_i(p,ii,energy)]-e1;
                   
 
 
@@ -115,13 +124,13 @@ void init_user_MODID (real *w, struct params *p,int *ii) {
 			// w(40,28,e_)=e0/(x(1,3,2)-x(1,2,2))**3.d0
 			//  w(80,92,e_)=e0/(x(1,3,2)-x(1,2,2))**3.d0  
 
-		    w[fencode3_i(p,ii,b1b)]=w[fencode3_i(p,ii,b1)];
-		    w[fencode3_i(p,ii,b2b)]=w[fencode3_i(p,ii,b2)];
-		    w[fencode3_i(p,ii,b3b)]=w[fencode3_i(p,ii,b3)];
+		    w[fencode3_i(p,ii,b1b)]=0;
+		    w[fencode3_i(p,ii,b2b)]=0;
+		    w[fencode3_i(p,ii,b3b)]=0;
 
-		    w[fencode3_i(p,ii,b1)]=0;
-		    w[fencode3_i(p,ii,b2)]=0;
-		    w[fencode3_i(p,ii,b3)]=0;
+		    //w[fencode3_i(p,ii,b1)]=0;
+		    //w[fencode3_i(p,ii,b2)]=0;
+		    //w[fencode3_i(p,ii,b3)]=0;
 
 
 
@@ -133,20 +142,20 @@ void init_user_MODID (real *w, struct params *p,int *ii) {
   
 
 #ifdef USE_SAC
-                    w[fencode3_i(p,ii,rho)]=0.0;
-                    w[fencode3_i(p,ii,energy)]=0.0;
+                    w[fencode3_i(p,ii,rhob)]=0.0;
+                    w[fencode3_i(p,ii,energyb)]=0.0;
 
 
                 if(r<0.1)
 		{
-		    w[fencode3_i(p,ii,rhob)]=rho1;
-                    w[fencode3_i(p,ii,energyb)]=rgamm1*pow(rho1,(p->gamma));
+		    w[fencode3_i(p,ii,rho)]=rho1;
+                    w[fencode3_i(p,ii,energy)]=rgamm1*pow(rho1,(p->gamma));
 		    //w[fencode3_i(p,ii,energyb)]=2.0*rgamm1*temp*boltz/mion;
 		}
 		else
 		{
-		    w[fencode3_i(p,ii,rhob)]=rho0;
-                    w[fencode3_i(p,ii,energyb)]=rgamm1*pow(rho0,(p->gamma));
+		    w[fencode3_i(p,ii,rho)]=rho0;
+                    w[fencode3_i(p,ii,energy)]=rgamm1*pow(rho0,(p->gamma));
 		}
 
 
@@ -161,26 +170,29 @@ void init_user_MODID (real *w, struct params *p,int *ii) {
 		    w[fencode3_i(p,ii,mom1)]=v1;
 
                    e1=(0.5*rgamm1*(1-((p->gamma)-1))*(w[fencode3_i(p,ii,b1)]*w[fencode3_i(p,ii,b1)]+w[fencode3_i(p,ii,b2)]*w[fencode3_i(p,ii,b2)]));
-                    w[fencode3_i(p,ii,energyb)]=w[fencode3_i(p,ii,energyb)]-e1;
+                    w[fencode3_i(p,ii,energy)]=w[fencode3_i(p,ii,energy)]-e1;
 
 
-                    w[fencode3_i(p,ii,energy)]=w[fencode3_i(p,ii,energyb)];
-                    w[fencode3_i(p,ii,energyb)]=0.0;
+                    //w[fencode3_i(p,ii,energy)]=w[fencode3_i(p,ii,energyb)];
+                    //w[fencode3_i(p,ii,energyb)]=0.0;
 
                     //w[fencode3_i(p,ii,rho)]=0;
                     //w[fencode3_i(p,ii,rhob)]=0.0;
-                    w[fencode3_i(p,ii,rho)]=w[fencode3_i(p,ii,rhob)];
-                    w[fencode3_i(p,ii,rhob)]=0.0;
+                    //w[fencode3_i(p,ii,rho)]=w[fencode3_i(p,ii,rhob)];
+                    //w[fencode3_i(p,ii,rhob)]=0.0;
                     //  fac=1.0;
                     // if(i==63 && j==63)
-                        w[fencode3_i(p,ii,energy)]+=fac*e0/pow(p->dx[0],3.0);
+                     //   w[fencode3_i(p,ii,energy)]+=fac*e0/pow(p->dx[0],3.0);
 		       //w[fencode3_i(p,ii,energy)]=e0/(0.0140098e42);
   
 			// w(40,28,e_)=e0/(x(1,3,2)-x(1,2,2))**3.d0
 			//  w(80,92,e_)=e0/(x(1,3,2)-x(1,2,2))**3.d0  
 
-		    w[fencode3_i(p,ii,b1b)]=w[fencode3_i(p,ii,b1)];
-		    w[fencode3_i(p,ii,b2b)]=w[fencode3_i(p,ii,b2)];
+		   // w[fencode3_i(p,ii,b1b)]=w[fencode3_i(p,ii,b1)];
+		   // w[fencode3_i(p,ii,b2b)]=w[fencode3_i(p,ii,b2)];
+
+		    w[fencode3_i(p,ii,b1b)]=0;
+		    w[fencode3_i(p,ii,b2b)]=0;
 
 		    //w[fencode3_i(p,ii,b1)]=0;
 		    //w[fencode3_i(p,ii,b2)]=0;
