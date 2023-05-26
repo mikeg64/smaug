@@ -546,8 +546,8 @@ char *method=NULL;
 		p->maxcourant=0.0;
                 dtgrav=BIGDOUBLE;
 		courantmax=SMALLDOUBLE;
-              dt=0.005;
-              p->dt=0.005;
+              dt=DT;
+              p->dt=DT;
 		for(int dim=0; dim<=(NDIM-1); dim++)
 		{
 			cucomputec(&p,&d_p,&d_wmod, &d_wd,order,dim);
@@ -664,7 +664,7 @@ char *method=NULL;
 		     if(f==energy)
 		     {
 			 cucomputevels(&p,&d_p,&d_wmod, &d_wd,order,dir);
-			 cucomputepbg(&p,&d_p,&d_wmod, &d_wd,ordero,dir);
+			 cucomputepbg(&p,&d_p,&d_wmod, &d_wd,order,dir);
 			 cucomputept(&p,&d_p,&d_wmod, &d_wd,order,dir);
 		     }
 		     cucentdiff2(&p,&d_p,&d_state,&d_wmod,&d_wmod, &d_dwn1, &d_wd,order, ordero,p->dt,f,dir);
@@ -903,7 +903,7 @@ tc=second();
 		     if(f==energy)
 		     {
 			 cucomputevels(&p,&d_p,&d_wmod, &d_wd,order,dir);
-			 cucomputepbg(&p,&d_p,&d_wmod, &d_wd,ordero,dir);
+			 cucomputepbg(&p,&d_p,&d_wmod, &d_wd,order,dir);
 			 cucomputept(&p,&d_p,&d_wmod, &d_wd,order,dir);
 		     }
 		     cucentdiff2(&p,&d_p,&d_state,&d_wmod,&d_wmod, &d_dwn1, &d_wd,order, ordero,p->dt,f,dir);
