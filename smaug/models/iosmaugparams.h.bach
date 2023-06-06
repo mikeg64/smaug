@@ -8,12 +8,12 @@
 //boundary conditions
 //period=0 mpi=1 mpiperiod=2  cont=3 contcd4=4 fixed=5 symm=6 asymm=7
 // U upper and L lower boundary type for each direction
-#define BCU0 0
-#define BCL0 0
-#define BCU1 0
-#define BCL1 0
-#define BCU2 0
-#define BCL2 0
+#define BCU0 4
+#define BCL0 4
+#define BCU1 4
+#define BCL1 4
+#define BCU2 4
+#define BCL2 4
 
 
 //Define parameter block
@@ -36,13 +36,13 @@
 
 //initial configuration is created!
 #define PREADINI 0.0
-#define PCFGSAVEFREQUENCY 100
+#define PCFGSAVEFREQUENCY 500
 
 #define PMAXVISCOEF 0.0
 #define PCHYP3 0.0
 #define PCHYP 0.02
-#define PCHYPRHO 0.02
-#define PCHYPENERGY 0.02
+#define PCHYPRHO 0.2
+#define PCHYPENERGY 0.2
 #define PCHYPB0 0.02
 #define PCHYPB1 0.02
 #define PCHYPB2 0.02
@@ -66,8 +66,9 @@
 #define NK 124
 
 //BACH3D  DT looking at propagation after 30000 years
-#define DT 5.0e6  
-#define NT 200001
+#define DT 5.0e4  //5.0e6
+//#define NT 200001
+#define NT 100001
 
 #define XMAX 14.19e18
 #define YMAX 14.19e18
@@ -79,7 +80,7 @@
 
 //#define CFGFILE "configs/zero1_ot_asc_4092.ini"
 #define CFGFILE "configs/3D_tubeact_128_128_128_asc_50.ini"
-#define CFGOUT "out/zeroHYP"
+#define CFGOUT "outHYP/zeroHYP"
 
 real cmax[NDIM];
 real courantmax;
@@ -114,14 +115,14 @@ real ymin= YMIN;
 
 #ifdef USE_SAC_3D
 int nk= NK;    //BW tests
-nk=nk+2*ngk;
+//nk=nk+2*ngk;
 real zmax= ZMAX;
 real zmin= ZMIN;
 //real dx = xmax/(ni-4);
 //real dz = (zmax-zmin)/(nk);
 #endif
 
-real *x, *y;
+real *x, *y, *z;
 
 
 int step=0;

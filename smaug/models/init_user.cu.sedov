@@ -34,7 +34,7 @@ void init_user_MODID (real *w, struct params *p,int *ii) {
 	b0=0;
 
 	//remove comment belwo to set 2D MHD blast problem (rotor)
-	//b0=0.1/sqrt(2.0);
+	//b0=1.0/sqrt(2.0);
 	v1=0.e0;
 	v2=0.e0;
 
