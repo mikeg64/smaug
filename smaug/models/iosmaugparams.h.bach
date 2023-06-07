@@ -36,7 +36,7 @@
 
 //initial configuration is created!
 #define PREADINI 0.0
-#define PCFGSAVEFREQUENCY 500
+#define PCFGSAVEFREQUENCY 1000
 
 #define PMAXVISCOEF 0.0
 #define PCHYP3 0.0
@@ -66,17 +66,17 @@
 #define NK 124
 
 //BACH3D  DT looking at propagation after 30000 years
-#define DT 5.0e4  //5.0e6
+#define DT 5.0e5  //5.0e6
 //#define NT 200001
-#define NT 100001
+#define NT 5000001
 
-#define XMAX 14.19e18
-#define YMAX 14.19e18
-#define ZMAX 14.19e18
+#define XMAX 12.19e18
+#define YMAX 12.19e18
+#define ZMAX 12.19e18
 
-#define XMIN -14.19e18
-#define YMIN -14.19e18
-#define ZMIN -14.19e18
+#define XMIN -12.19e18
+#define YMIN -12.19e18
+#define ZMIN -12.19e18
 
 //#define CFGFILE "configs/zero1_ot_asc_4092.ini"
 #define CFGFILE "configs/3D_tubeact_128_128_128_asc_50.ini"

@@ -106,7 +106,7 @@ void init_user_MODID (real *w, struct params *p,int *ii) {
                     //w[fencode3_i(p,ii,energy)]=w[fencode3_i(p,ii,energyb)];
                     //w[fencode3_i(p,ii,energyb)]=0.0;
 
-                     if(i==63 && j==83  && k==63)
+                     if(i==63 && j==71  && k==63)
                         w[fencode3_i(p,ii,energy)]=w[fencode3_i(p,ii,energy)]+e0/pow(p->dx[0],3.0);
   
 			// w(40,28,e_)=e0/(x(1,3,2)-x(1,2,2))**3.d0
