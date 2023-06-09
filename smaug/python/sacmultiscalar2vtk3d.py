@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# Convert sac vector field to vtk 3d format
+# Convert sac scalar field to vtk 3d format
 
 # This current writer works for scalar variables
 # there is a problem with the input file because row zero appears to have co-ordinate values and not the required
@@ -64,7 +64,7 @@ def read_sac_bin(filename):
 
 
 
-def write_sac_vector_vtk(outputfile, field, outfieldname, alldat, modelinfo):
+def write_sac_scalar_vtk(outputfile, field, outfieldname, alldat, modelinfo):
     # alldat :: the full array of vacdata from getpict 
     # alldat[0:2] :: are the position data     
     # field :: which field
@@ -114,52 +114,50 @@ def write_sac_vector_vtk(outputfile, field, outfieldname, alldat, modelinfo):
     #     printf,lu,' '
     #     printf,lu,'DATASET RECTILINEAR_GRID'
     #     printf,lu,'DIMENSIONS ',sizew(1),' ',sizew(2),'    ',sizew(3)
-    
-    file.write("Rectilinear Grid\n")
+    file.write("#Structured Points\n")
     file.write("ASCII\n")
     file.write(" \n")
-    file.write("DATASET RECTILINEAR_GRID\n")
+    file.write("DATASET STRUCTURED_POINTS\n")
     file.write("DIMENSIONS "+str(dim[0])+" "+str(dim[1])+" "+str(dim[2])+"\n")
-    #file.write("SPACING "+str(dx)+" "+str(dy)+" "+str(dz)+"\n")
-    #file.write("ORIGIN "+str(xo)+" "+str(yo)+" "+str(zo)+"\n")   
+    file.write("ORIGIN "+str(xo)+" "+str(yo)+" "+str(zo)+"\n")
+    file.write("SPACING "+str(dx)+" "+str(dy)+" "+str(dz)+"\n")
     
-
 
     #        printf,lu,'X_COORDINATES ',sizew(1),' double'
     #        for ix=0,sizew(1)-1 do begin
     #           printf,lu,x(ix,0,0)
     #        endfor
-    #file.write("POINTS "+str(dim[0]*dim[1]*dim[2])+" double \n")
-    file.write("X_COORDINATES "+str(dim[0])+" double\n")
-    j=0
-    line=""
-    for i1 in range(dim[0]):
-        line=line+str(alldat[1,0,i1,0])+" "
-    line=line+"\n"
-    file.write(line)
 
-    file.write("Y_COORDINATES "+str(dim[1])+" double\n")
-    j=1
-    line=""
-    for i1 in range(dim[1]):
-        line=line+str(alldat[1,0,i1,0])+" "
-    line=line+"\n"
-    file.write(line)
+    ##file.write("X_COORDINATES "+str(dim[0])+" double\n")
+    ##j=0
+    ##line=""
+    ##for i1 in range(dim[0]):
+    ##    line=line+str(alldat[1,0,i1,0])
+    ##    line=line+"\n"
+    ##file.write(line)
 
-    file.write("Z_COORDINATES "+str(dim[2])+" double\n")
-    j=2
-    line=""
-    for i1 in range(dim[2]):
-        line=line+str(alldat[1,0,i1,0])+" "
-    line=line+"\n"
-    file.write(line)
+    ##file.write("Y_COORDINATES "+str(dim[1])+" double\n")
+    ##j=1
+    ##line=""
+    ##for i1 in range(dim[1]):
+    ##    line=line+str(alldat[1,0,i1,0])
+    ##    line=line+"\n"
+    ##file.write(line)
+
+    ##file.write("Z_COORDINATES "+str(dim[2])+" double\n")
+    ##j=2
+    ##line=""
+    ##for i1 in range(dim[2]):
+    ##    line=line+str(alldat[1,0,i1,0])
+    ##    line=line+"\n"
+    ##file.write(line)
 
     #        printf,lu,'POINT_DATA ',sizew(1)*sizew(2)*sizew(3)
     #       printf,lu,'SCALARS ',filename,' double 1'
+    file.write("POINT_DATA "+str(dim[0]*dim[1]*dim[2])+"\n")
+    file.write("SCALARS "+outfieldname+" double\n")
 
-
-
-    #file.write("LOOKUP_TABLE default\n")
+    file.write("LOOKUP_TABLE default\n")
     #        printf,lu,'LOOKUP_TABLE TableName '
     #        for iz=0,sizew(3)-1 do begin
     #           for iy=0,sizew(2)-1 do begin
@@ -168,9 +166,6 @@ def write_sac_vector_vtk(outputfile, field, outfieldname, alldat, modelinfo):
     #              endfor
     #           endfor
     #        endfor
-    
-    file.write("POINT_DATA "+str(dim[0]*dim[1]*dim[2])+"\n")    
-    file.write("VECTORS "+outfieldname+" double\n")
     j=field+ndim
     for i3 in range(dim[2]):
         for i2 in range(dim[1]):
@@ -181,13 +176,74 @@ def write_sac_vector_vtk(outputfile, field, outfieldname, alldat, modelinfo):
     #fields formatted with [] around numbers
                 for d in alldat[j,i1,i2,i3]:
                     line=line+str(d)+" "
+            line=line+"\n"
+            file.write(line)            
+    file.write("SCALARS "+"mom1"+" double\n")
+    file.write("LOOKUP_TABLE default\n")
+    #        printf,lu,'LOOKUP_TABLE TableName '
+    #        for iz=0,sizew(3)-1 do begin
+    #           for iy=0,sizew(2)-1 do begin
+    #              for ix=0,sizew(1)-1 do begin
+    #                printf,lu,vacdata(ix,iy,iz,field)
+    #              endfor
+    #           endfor
+    #        endfor
+    j=field+ndim
+    for i3 in range(dim[2]):
+        for i2 in range(dim[1]):
+            line=""
+            for i1 in range(dim[0]):
+    #TODO
+    # note form in which we have written this otherwise 
+    #fields formatted with [] around numbers
                 for d in alldat[j+1,i1,i2,i3]:
                     line=line+str(d)+" "
+            line=line+"\n"
+            file.write(line)            
+    file.write("SCALARS "+"mom2"+" double\n")
+    file.write("LOOKUP_TABLE default\n")
+    #        printf,lu,'LOOKUP_TABLE TableName '
+    #        for iz=0,sizew(3)-1 do begin
+    #           for iy=0,sizew(2)-1 do begin
+    #              for ix=0,sizew(1)-1 do begin
+    #                printf,lu,vacdata(ix,iy,iz,field)
+    #              endfor
+    #           endfor
+    #        endfor
+    j=field+ndim
+    for i3 in range(dim[2]):
+        for i2 in range(dim[1]):
+            line=""
+            for i1 in range(dim[0]):
+    #TODO
+    # note form in which we have written this otherwise 
+    #fields formatted with [] around numbers
                 for d in alldat[j+2,i1,i2,i3]:
-                    line=line+str(d)+" "                    
-                line=line+"\n"
-            file.write(line)
-
+                    line=line+str(d)+" "
+            line=line+"\n"
+            file.write(line)                
+    file.write("SCALARS "+"mom3"+" double\n")
+    file.write("LOOKUP_TABLE default\n")
+    #        printf,lu,'LOOKUP_TABLE TableName '
+    #        for iz=0,sizew(3)-1 do begin
+    #           for iy=0,sizew(2)-1 do begin
+    #              for ix=0,sizew(1)-1 do begin
+    #                printf,lu,vacdata(ix,iy,iz,field)
+    #              endfor
+    #           endfor
+    #        endfor
+    j=field+ndim
+    for i3 in range(dim[2]):
+        for i2 in range(dim[1]):
+            line=""
+            for i1 in range(dim[0]):
+    #TODO
+    # note form in which we have written this otherwise 
+    #fields formatted with [] around numbers
+                for d in alldat[j+3,i1,i2,i3]:
+                    line=line+str(d)+" "
+            line=line+"\n"
+            file.write(line)                            
     file.close()
 
 
@@ -220,8 +276,8 @@ outputfile='/media/mike/data/mike/proj/smaug/hyp/vtk/'+outfilename
 #typedef enum vars {rho, mom1, mom2, energy, b1, b2,energyb,rhob,b1b,b2b} CEV;
 
 #density scalar component
-field=1
-outfieldname='mom'
+field=0
+outfieldname='dens'
 
 #origin
 xo=0.0
@@ -242,12 +298,12 @@ dz=1.90469e17
 
 #print(alldat[1,0,:,0])
 
-for i in range(80000,85000,1000):
+for i in range(86000,486000,1000):
     print(i)
-    outfilename=outfilepath+"nypnovmomvec_ascii_"+str(i)+".vtk"
+    outfilename=outfilepath+"nypnov_ascii_"+str(i)+".vtk"
     inputfile=infilepath+"zeroHYP_"+str(i)+".out"
     [alldat,modelinfo]=read_sac_bin(inputfile)
-    write_sac_vector_vtk(outfilename, field, outfieldname, alldat, modelinfo)
+    write_sac_scalar_vtk(outfilename, field, outfieldname, alldat, modelinfo)
     print(str(i)+" complete\n")
     
 
